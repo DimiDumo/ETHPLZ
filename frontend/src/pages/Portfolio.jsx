@@ -1,6 +1,10 @@
-import React from "react";
-import BasePage from './BasePage'
+import React from 'react';
+import BasePage from './BasePage';
 
 export default function Portfolio() {
-    return <BasePage>Portfolio</BasePage>
+  return (
+    <BasePage>
+      <div>Portfolio</div>
+    </BasePage>
+  );
 }

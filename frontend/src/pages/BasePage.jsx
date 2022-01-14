@@ -1,12 +1,20 @@
-import React from "react";
-import Layout from "antd/lib/layout/layout";
-const {Header, Content} = Layout
+import React from 'react';
+import PropTypes from 'prop-types';
+import Layout from 'antd/lib/layout/layout';
 
-export default function Discovery(props) {
-    const {children} = props
+const { Header, Content } = Layout;
 
-    return <Layout>
+const BasePage = ({ children }) => {
+  return (
+    <Layout>
       <Header>Header</Header>
       <Content>{children}</Content>
     </Layout>
-}
+  );
+};
+
+BasePage.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default BasePage;

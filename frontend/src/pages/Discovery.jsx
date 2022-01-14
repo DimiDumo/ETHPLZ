@@ -1,6 +1,12 @@
-import React from "react";
-import BasePage from './BasePage'
+import React from 'react';
+import BasePage from './BasePage';
 
-export default function Discovery() {
-    return <BasePage>Discovery</BasePage>
-}
+const Discovery = () => {
+  return (
+    <BasePage>
+      <div>Discovery</div>
+    </BasePage>
+  );
+};
+
+export default Discovery;
