@@ -3,9 +3,10 @@ const getMasterWallet = require('../src/provider.js')
 async function main() {
   const { provider } = getMasterWallet()
   const receipt = await provider.getTransactionReceipt(
-    '0xd195536f2f58e62829fa89c23845f0c093887ee1c27238c2126a7876fcca58c4'
+    '0xacca609097a2773831090e98270a7cc152cfac770a4d1d4b3d7a56420404a1f2'
   )
   console.log('receipt: ', receipt)
+  console.log('receipt.logs: ', receipt.logs)
   console.log('receipt.gasUsed.toString(): ', receipt.gasUsed.toString())
 }
 

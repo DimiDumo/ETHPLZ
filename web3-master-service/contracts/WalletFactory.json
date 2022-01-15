@@ -1,6 +1,6 @@
 {
-  "address": "0x2c8Ad35Afb4a89B4d531aAd9d6BB50660fB3601a",
-  "abi":[
+  "address": "0x5FA779253604b079FE06ec6887B1b21C1d67f3fc",
+  "abi": [
     {
       "inputs": [
         {
@@ -21,9 +21,15 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
           "name": "walletAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "initialSigner",
           "type": "address"
         }
       ],
