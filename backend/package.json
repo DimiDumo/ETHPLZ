@@ -1,0 +1,15 @@
+{
+  "name": "plz_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cloud-watcher": "npx moralis-admin-cli watch-cloud-folder --moralisApiKey U5P5zMJm2SnoLfE --moralisApiSecret vU5aeZeMXCmuWAC --moralisSubdomain hjokahdvmfah.usemoralis.com --autoSave 1 --moralisCloudfolder ./cloud"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moralis-admin-cli": "^2.1.16"
+  }
+}
