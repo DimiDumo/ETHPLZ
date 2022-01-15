@@ -44,7 +44,7 @@ contract PleaseWallet is
     mapping(bytes4 => uint256) public actionDelay;
     IGuardianManager public guardianManager;
 
-    event ActionQueued(bytes32 indexed actionHash, uint256 earliestSettle);
+    event ActionQueued(bytes32 indexed actionHash, bytes callData, uint256 earliestSettle);
     event ActionInvalidated(bytes32 indexed actionHash);
     event ExecutionResult(bytes result);
     event UpdatePrimarySigner(address indexed prevPrimarySigner, address indexed newPrimarySigner);
@@ -146,14 +146,12 @@ contract PleaseWallet is
         uint256 _nonce
     ) external onlyWallet {
         require(!isInstant(_selector), "PLZWallet: Cannot be queued");
-        bytes32 actionHash = _createNonInstantActionHash(
-            abi.encodePacked(_selector, _functionData),
-            _nonce
-        );
+        bytes memory callData = abi.encodePacked(_selector, _functionData);
+        bytes32 actionHash = _createNonInstantActionHash(callData, _nonce);
         require(actionEarliestSettle[actionHash] == ACTION_IS_NEW, "PLZWallet: Action not new");
         uint256 earliestSettle = block.timestamp + actionDelay[_selector];
         actionEarliestSettle[actionHash] = earliestSettle;
-        emit ActionQueued(actionHash, earliestSettle);
+        emit ActionQueued(actionHash, callData, earliestSettle);
     }
 
     function invalidateAction(bytes32 _actionHash) external onlyWallet {
