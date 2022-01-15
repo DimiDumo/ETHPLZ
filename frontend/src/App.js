@@ -26,7 +26,7 @@ export default function App() {
           <Route path="/portfolio">
             <Portfolio />
           </Route>
-          <Route path="/">
+          <Route path="/:nftId?">
             <Discovery />
           </Route>
         </Switch>
