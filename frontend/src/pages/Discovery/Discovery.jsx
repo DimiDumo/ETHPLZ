@@ -3,9 +3,8 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Holder from 'holderjs';
 
-import BasePage from './BasePage/BasePage';
-
-import './Discovery.scss';
+import BasePage from '../BasePage/BasePage';
+import DetailView from './DetailView';
 
 const Discovery = () => {
   const content = [{}, {}, {}, {}, {}, {}, {}].map((item) => ({
@@ -13,12 +12,15 @@ const Discovery = () => {
     ...item,
   }));
 
+  const [isDetailedViewOpen, setIsDetailedViewOpen] = React.useState(false);
+
   React.useEffect(() => {
     Holder.run();
   }, []);
 
   const handleClick = (id) => {
     console.log(`clicked ${id}`);
+    setIsDetailedViewOpen(true);
   };
   return (
     <BasePage>
@@ -36,6 +38,7 @@ const Discovery = () => {
           </span>
         ))}
       </div>
+      <DetailView isModalOpen={isDetailedViewOpen} />
     </BasePage>
   );
 };

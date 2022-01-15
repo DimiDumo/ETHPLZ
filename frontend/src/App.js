@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Discovery from './pages/Discovery';
+import Discovery from './pages/Discovery/Discovery';
 import Portfolio from './pages/Portfolio';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 
-import './App.css';
+import './index.css';
 
 export default function App() {
   return (
