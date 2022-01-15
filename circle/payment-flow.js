@@ -93,6 +93,15 @@ async function pay(amount, metadata, encryptedCreditCardData) {
         .catch(err => console.error('error:' + err));
 }
 
+async function getPaymentStatus(id) {
+    return await fetch('https://api-sandbox.circle.com/v1/payments/' + id, {
+        method: 'GET',
+        headers: headers
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
 // ================usage======================
 
 const { publicKey, keyId } = await getPublicKey()
@@ -126,3 +135,11 @@ const source = {
 
 const payResult = await pay("420.69", metadata, encryptedCreditCardData);
 console.log("payResult: ", payResult);
+
+while (true) {
+    let paymentStatus = await getPaymentStatus(payResult["data"]["id"]);
+    console.log("new status: ", paymentStatus);
+    if (paymentStatus["data"]["status"] !== "pending") {
+        break;
+    }
+}
