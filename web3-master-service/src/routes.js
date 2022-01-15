@@ -29,4 +29,12 @@ router.post(
   })
 )
 
+router.get(
+  '/master-key',
+  createHandler(async () => {
+    const { masterWallet } = getMasterWallet()
+    return masterWallet.address
+  })
+)
+
 module.exports = router

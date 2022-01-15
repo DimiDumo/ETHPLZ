@@ -26,10 +26,10 @@ const createHandler = (handler) => async (req, apiRes) => {
 const wrapMiddleware = (middleware) => async (req, res, next) => {
   try {
     await middleware(req)
+    next()
   } catch (err) {
     handleError(err, res)
   }
-  next()
 }
 
 module.exports = { ApiError, createHandler, wrapMiddleware }

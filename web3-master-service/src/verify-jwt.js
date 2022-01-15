@@ -15,8 +15,12 @@ const jwtVerify = (token) =>
 
 const verifyAuthToken = wrapMiddleware(async ({ body }) => {
   if (!body?.token) throw new ApiError(401, 'Missing .token auth token')
-  const { verified } = await jwtVerify(body.token)
+  const { verified, content } = await jwtVerify(body.token)
   if (!verified) throw new ApiError(401, 'Invalid token')
+  const { accessId } = content
+  if (typeof accessId !== 'number' || accessId >= 100_000) {
+    throw new ApiError(401, 'Invalid access ID')
+  }
 })
 
 module.exports = { verifyAuthToken, jwtVerify }
