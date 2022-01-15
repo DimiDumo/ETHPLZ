@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.3.0",
-    "@font/nunito": "^1.0.3",
+    "@fontsource/nunito": "^4.5.1",
     "@heroicons/react": "^1.0.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
