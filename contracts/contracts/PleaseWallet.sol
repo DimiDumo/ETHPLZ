@@ -9,7 +9,8 @@ import "./IGuardianManager.sol";
 contract PleaseWallet is ERC721Holder, ERC1155Holder {
     using ECDSA for bytes32;
 
-    uint256 internal constant NO_DELAY = 0;
+    uint256 internal constant UNREGISTERED = 0;
+    uint256 internal constant NO_DELAY = 1;
     uint256 internal constant BASIC_SECURITY_DELAY = 2 days;
     uint256 internal constant HIGH_SECURITY_DELAY = 7 days;
 
@@ -35,7 +36,7 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
 
     constructor(address _initialSigner, address _guardianManager) {
         // ensure uuid is different between chains, versions and individual wallets
-        WALLET_UUID = keccak256(abi.encode("PleaseWallet v0.1 UUID", block.chainid, address(this)));
+        WALLET_UUID = keccak256(abi.encode("PLZWallet v0.1 UUID", block.chainid, address(this)));
         primarySigner = _initialSigner;
 
         guardianManager = IGuardianManager(_guardianManager);
@@ -46,12 +47,12 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
     }
 
     modifier onlyWallet() {
-        require(msg.sender == address(this), "PleaseWallet: Not wallet");
+        require(msg.sender == address(this), "PLZWallet: Not wallet");
         _;
     }
 
     modifier onlyGuardian() {
-        require(msg.sender == address(guardianManager), "PleaseWallet: Not guardian");
+        require(msg.sender == address(guardianManager), "PLZWallet: Not guardian");
         _;
     }
 
@@ -75,19 +76,19 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
         bytes calldata _functionData,
         uint256 _nonce
     ) external onlyWallet {
-        require(!isInstant(_selector), "PleaseWallet: Cannot be queued");
+        require(!isInstant(_selector), "PLZWallet: Cannot be queued");
         bytes32 actionHash = _createNonInstantActionHash(
             abi.encodePacked(_selector, _functionData),
             _nonce
         );
-        require(actionEarliestSettle[actionHash] == ACTION_IS_NEW, "PleaseWallet: Action not new");
+        require(actionEarliestSettle[actionHash] == ACTION_IS_NEW, "PLZWallet: Action not new");
         uint256 earliestSettle = block.timestamp + actionDelay[_selector];
         actionEarliestSettle[actionHash] = earliestSettle;
         emit ActionQueued(actionHash, earliestSettle);
     }
 
     function invalidateAction(bytes32 _actionHash) external onlyWallet {
-        require(actionEarliestSettle[_actionHash] != ACTION_EXECUTED, "PleaseWallet: Action done");
+        require(actionEarliestSettle[_actionHash] != ACTION_EXECUTED, "PLZWallet: Action done");
         actionEarliestSettle[_actionHash] = ACTION_EXECUTED;
         emit ActionInvalidated(_actionHash);
     }
@@ -98,21 +99,26 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
         bytes calldata _signature,
         uint256 _nonce
     ) external {
+        require(!isUnregistered(_selector), "PLZWallet: Unregistered method");
         bytes memory callData = abi.encodePacked(_selector, _functionData);
         bytes32 actionHash;
         if (isInstant(_selector)) {
             actionHash = keccak256(abi.encode(WALLET_UUID, callData));
         } else {
-            require(_nonce == walletNonce++, "PleaseWallet: Invalid nonce");
+            require(_nonce == walletNonce++, "PLZWallet: Invalid nonce");
             actionHash = _createNonInstantActionHash(callData, _nonce);
             uint256 earliestSettle = actionEarliestSettle[actionHash];
-            require(earliestSettle > ACTION_EXECUTED, "PleaseWallet: Action not pending");
-            require(block.timestamp >= earliestSettle, "PleaseWallet: Action not ready");
+            require(earliestSettle > ACTION_EXECUTED, "PLZWallet: Action not pending");
+            require(block.timestamp >= earliestSettle, "PLZWallet: Action not ready");
             actionEarliestSettle[actionHash] = ACTION_EXECUTED;
         }
         address callSigner = actionHash.toEthSignedMessageHash().recover(_signature);
-        require(callSigner == primarySigner, "PleaseWallet: Not primary key");
+        require(callSigner == primarySigner, "PLZWallet: Not primary key");
         _selfCall(callData);
+    }
+
+    function isUnregistered(bytes4 _actionSelector) public view returns (bool) {
+        return actionDelay[_actionSelector] == UNREGISTERED;
     }
 
     function isInstant(bytes4 _actionSelector) public view returns (bool) {
