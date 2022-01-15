@@ -7,6 +7,7 @@ import "./IGuardianManager.sol";
 contract PleaseWallet {
     using ECDSA for bytes32;
 
+    uint256 internal constant NO_DELAY = 0;
     uint256 internal constant BASIC_SECURITY_DELAY = 2 days;
     uint256 internal constant HIGH_SECURITY_DELAY = 7 days;
 
@@ -23,7 +24,6 @@ contract PleaseWallet {
 
     // wallet config
     mapping(bytes4 => uint256) public actionDelay;
-    mapping(bytes4 => bool) public actionInstant;
     IGuardianManager public guardianManager;
 
     event ActionQueued(bytes32 indexed actionHash, uint256 earliestSettle);
@@ -31,12 +31,16 @@ contract PleaseWallet {
     event ExecutionResult(bytes result);
     event UpdatePrimarySigner(address indexed prevPrimarySigner, address indexed newPrimarySigner);
 
-    constructor(address _initialSigner) {
+    constructor(address _initialSigner, address _guardianManager) {
         // ensure uuid is different between chains, versions and individual wallets
         WALLET_UUID = keccak256(abi.encode("PleaseWallet v0.1 UUID", block.chainid, address(this)));
         primarySigner = _initialSigner;
-        actionInstant[PleaseWallet.queueAction.selector] = true;
-        actionInstant[PleaseWallet.invalidateAction.selector] = true;
+
+        guardianManager = IGuardianManager(_guardianManager);
+
+        actionDelay[PleaseWallet.queueAction.selector] = NO_DELAY;
+        actionDelay[PleaseWallet.invalidateAction.selector] = NO_DELAY;
+        actionDelay[PleaseWallet.updateRecoverySettings.selector] = HIGH_SECURITY_DELAY;
     }
 
     modifier onlyWallet() {
@@ -55,12 +59,19 @@ contract PleaseWallet {
         emit UpdatePrimarySigner(prevPrimarySigner, _newPrimarySigner);
     }
 
+    function updateRecoverySettings(address[] calldata _newGuardians, uint256 _newThreshhold)
+        external
+        onlyWallet
+    {
+        guardianManager.updateSettings(_newGuardians, _newThreshhold);
+    }
+
     function queueAction(
         bytes4 _selector,
         bytes calldata _functionData,
         uint256 _nonce
     ) external onlyWallet {
-        require(!actionInstant[_selector], "PleaseWallet: Cannot be queued");
+        require(!isInstant(_selector), "PleaseWallet: Cannot be queued");
         bytes32 actionHash = _createNonInstantActionHash(
             abi.encodePacked(_selector, _functionData),
             _nonce
@@ -85,7 +96,7 @@ contract PleaseWallet {
     ) external {
         bytes memory callData = abi.encodePacked(_selector, _functionData);
         bytes32 actionHash;
-        if (actionInstant[_selector]) {
+        if (isInstant(_selector)) {
             actionHash = keccak256(abi.encode(WALLET_UUID, callData));
         } else {
             require(_nonce == walletNonce++, "PleaseWallet: Invalid nonce");
@@ -98,6 +109,10 @@ contract PleaseWallet {
         address callSigner = actionHash.toEthSignedMessageHash().recover(_signature);
         require(callSigner == primarySigner, "PleaseWallet: Not primary key");
         _selfCall(callData);
+    }
+
+    function isInstant(bytes4 _actionSelector) public view returns (bool) {
+        return actionDelay[_actionSelector] == NO_DELAY;
     }
 
     function _createNonInstantActionHash(bytes memory _callData, uint256 _nonce)
