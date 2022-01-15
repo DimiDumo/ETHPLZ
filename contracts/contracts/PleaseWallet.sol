@@ -2,6 +2,7 @@
 pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "./IGuardianManager.sol";
@@ -21,6 +22,7 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
     bytes32 public WALLET_UUID;
 
     // wallet state
+    bool internal withinSelfCall;
     address public primarySigner;
     uint256 public walletNonce;
     mapping(bytes32 => uint256) public actionEarliestSettle;
@@ -43,12 +45,16 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
 
         actionDelay[PleaseWallet.queueAction.selector] = NO_DELAY;
         actionDelay[PleaseWallet.invalidateAction.selector] = NO_DELAY;
+        actionDelay[PleaseWallet.sendER20.selector] = BASIC_SECURITY_DELAY;
         actionDelay[PleaseWallet.updateRecoverySettings.selector] = HIGH_SECURITY_DELAY;
     }
 
     modifier onlyWallet() {
         require(msg.sender == address(this), "PLZWallet: Not wallet");
+        require(!withinSelfCall, "PLZWallet: Nested self call");
+        withinSelfCall = true;
         _;
+        withinSelfCall = false;
     }
 
     modifier onlyGuardian() {
@@ -57,6 +63,14 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
     }
 
     receive() external payable {}
+
+    function sendER20(
+        address _token,
+        address _recipient,
+        uint256 _amount
+    ) external onlyWallet {
+        IERC20(_token).transfer(_recipient, _amount);
+    }
 
     function resetPrimarySigner(address _newPrimarySigner) external onlyGuardian {
         address prevPrimarySigner = primarySigner;
