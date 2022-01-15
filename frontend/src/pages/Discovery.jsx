@@ -1,5 +1,5 @@
 import React from 'react';
-import BasePage from './BasePage';
+import BasePage from './BasePage/BasePage';
 
 const Discovery = () => {
   return (
