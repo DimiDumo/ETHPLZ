@@ -37,7 +37,7 @@ async function emailPasswordSignup(email, password) {
     user.set("email", email);
     // TODO: An actual local address
     user.set("localWalletAddress", "0x0000000000000000000000000000000000000000");
-    // user.set("contractWalletAddress", "0x0000000000000000000000000000000000000000");
+    // TODO: Could add some signature verification but eh
 
     try {
         await user.signUp();
@@ -65,6 +65,7 @@ async function emailPasswordLogin(email, password) {
         user = await Moralis.User.logIn(email, password)
             .then(function (user) {
                 console.log("logged in user:", user);
+                console.log(JSON.stringify(user));
             })
             .catch(function (error) {
                 console.log(error);

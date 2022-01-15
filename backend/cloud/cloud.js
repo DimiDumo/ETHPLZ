@@ -1,6 +1,5 @@
 Moralis.Cloud.define("resetWalletAddress", async (request) => {
     // TODO: Generate a reset token (signature from the name of the company wallet permitting the user to set a new private wallet in the contract wallet)
-    // TODO: Send the generated token in a link to the users email
     // Rinkeby
     const web3 = Moralis.web3ByChain("0x4");
     // super secret private key
@@ -11,6 +10,12 @@ Moralis.Cloud.define("resetWalletAddress", async (request) => {
     const email = request.user.get("email");
     const sig = web3.eth.accounts.sign(email, privateKey);
 
+    Moralis.Cloud.sendEmail({
+        to: email,
+        subject: "Plz Wallet local wallet reset key",
+        html: "http://plz.wallet/?" + Object.entries(sig).map(e => e.join('=')).join('&')
+    });
+
     return sig;
 }, {
     requireUser: true
@@ -20,10 +25,11 @@ Moralis.Cloud.define("generateContractWallet", async (request) => {
     // TODO: Actually generate contract address
     if (!request.user.get("contractWalletAddress")) {
         request.user.set("contractWalletAddress", "0x0000000000000000000000000000000000000000");
-        request.user.save();
-        return 1;
+        await request.user.save(null, { useMasterKey: true });
+        return request.user;
     }
     return 2;
 }, {
-    requireUser: true
+    requireUser: true,
+    useMasterKey: true
 });
