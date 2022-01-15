@@ -1,12 +1,12 @@
 import React from 'react';
 import BasePage from './BasePage';
 
-const Portfolio = () => {
+const Profile = () => {
   return (
     <BasePage>
-      <div>Portfolio</div>
+      <div>Profile</div>
     </BasePage>
   );
 };
 
-export default Portfolio;
+export default Profile;
