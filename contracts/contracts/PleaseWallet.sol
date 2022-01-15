@@ -37,7 +37,6 @@ contract PleaseWallet is
     // wallet state
     bool internal withinSelfCall;
     address public primarySigner;
-    uint256 public walletNonce;
     mapping(bytes32 => uint256) public actionEarliestSettle;
 
     // wallet config
@@ -140,14 +139,10 @@ contract PleaseWallet is
         guardianManager.updateSettings(_newGuardians, _newThreshhold);
     }
 
-    function queueAction(
-        bytes4 _selector,
-        bytes calldata _functionData,
-        uint256 _nonce
-    ) external onlyWallet {
+    function queueAction(bytes4 _selector, bytes calldata _functionData) external onlyWallet {
         require(!isInstant(_selector), "PLZWallet: Cannot be queued");
         bytes memory callData = abi.encodePacked(_selector, _functionData);
-        bytes32 actionHash = _createNonInstantActionHash(callData, _nonce);
+        bytes32 actionHash = _createNonInstantActionHash(callData, block.number);
         require(actionEarliestSettle[actionHash] == ACTION_IS_NEW, "PLZWallet: Action not new");
         uint256 earliestSettle = block.timestamp + actionDelay[_selector];
         actionEarliestSettle[actionHash] = earliestSettle;
@@ -164,7 +159,7 @@ contract PleaseWallet is
         bytes4 _selector,
         bytes calldata _functionData,
         bytes calldata _signature,
-        uint256 _nonce
+        uint256 _submittedBlock
     ) external {
         require(!isUnregistered(_selector), "PLZWallet: Unregistered method");
         bytes memory callData = abi.encodePacked(_selector, _functionData);
@@ -172,8 +167,7 @@ contract PleaseWallet is
         if (isInstant(_selector)) {
             actionHash = keccak256(abi.encode(WALLET_UUID, callData));
         } else {
-            require(_nonce == walletNonce++, "PLZWallet: Invalid nonce");
-            actionHash = _createNonInstantActionHash(callData, _nonce);
+            actionHash = _createNonInstantActionHash(callData, _submittedBlock);
             uint256 earliestSettle = actionEarliestSettle[actionHash];
             require(earliestSettle > ACTION_EXECUTED, "PLZWallet: Action not pending");
             require(block.timestamp >= earliestSettle, "PLZWallet: Action not ready");
@@ -196,12 +190,12 @@ contract PleaseWallet is
         return actionDelay[_actionSelector] == NO_DELAY;
     }
 
-    function _createNonInstantActionHash(bytes memory _callData, uint256 _nonce)
+    function _createNonInstantActionHash(bytes memory _callData, uint256 _submittedBlock)
         internal
         view
         returns (bytes32)
     {
-        return keccak256(abi.encode(WALLET_UUID, _callData, primarySigner, _nonce));
+        return keccak256(abi.encode(WALLET_UUID, _callData, primarySigner, _submittedBlock));
     }
 
     function _selfCall(bytes memory _callData) internal {
