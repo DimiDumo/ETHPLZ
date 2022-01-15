@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useMoralis } from 'react-moralis';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import localWallet from '../../domain/localWallet';
 
@@ -10,7 +10,8 @@ import WithApple from './Buttons/Apple.png';
 import WithGoogle from './Buttons/Google.png';
 
 const SignIn = () => {
-  const { signup, login } = useMoralis();
+  const { signup, login, isAuthenticated } = useMoralis();
+  const { nftId } = useParams();
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
   const [userEmail, setUserEmail] = React.useState('web2user@gmail.com');
@@ -37,6 +38,17 @@ const SignIn = () => {
 
     handleLogin();
   };
+
+  React.useEffect(() => {
+    if (!isAuthenticated) return;
+
+    if (nftId) {
+      history.push(`/purchase/${nftId}`);
+      return;
+    }
+
+    history.push(`/portfolio`);
+  }, [isAuthenticated, nftId]);
 
   return (
     <BasePage headerTitle="Sign In">
