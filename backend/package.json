@@ -11,5 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "moralis-admin-cli": "^2.1.16"
+  },
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "eslint-plugin-prettier": "^4.0.0"
   }
 }
