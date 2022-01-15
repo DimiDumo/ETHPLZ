@@ -12,6 +12,52 @@
     <button id="btn-login">Moralis Metamask Login</button>
     <button id="btn-logout">Logout</button>
     <button id="btn-reset">Reset</button>
+    <button id="btn-gen">Generate Contract Wallet</button>
+
+    <form
+      action="javascript:emailPasswordSignup(email_signup.value, password_signup.value)"
+    >
+      <input
+        type="text"
+        placeholder="Email"
+        name="email"
+        id="email_signup"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        id="password_signup"
+        required
+      />
+      <button type="submit">Signup</button>
+    </form>
+
+    <form
+      action="javascript:emailPasswordLogin(email_login.value, password_login.value)"
+    >
+      <input
+        type="text"
+        placeholder="Email"
+        name="email"
+        id="email_login"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        id="password_login"
+        required
+      />
+      <button type="submit">Login</button>
+
+      <div class="container" style="background-color: #f1f1f1">
+        <button type="button" class="cancelbtn">Cancel</button>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+      </div>
+    </form>
 
     <script type="text/javascript" src="./main.js"></script>
   </body>
