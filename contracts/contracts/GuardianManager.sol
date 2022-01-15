@@ -3,6 +3,7 @@ pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./IPleaseWallet.sol";
 import "./IGuardianManager.sol";
 
 contract GuardianManager is IGuardianManager {
@@ -56,6 +57,9 @@ contract GuardianManager is IGuardianManager {
         for (uint256 i; i < _guardians.length; i++) {
             GuardianInput calldata guardianInp = _guardians[i];
             address guardian = guardianInp.guardian;
+            if (guardianInp.isPlzWallet) {
+                guardian = IPleaseWallet(guardian).primarySigner();
+            }
             require(settings.isGuardianAt[guardian] == currentIteration, "GuardMan: Not guardian");
             for (uint256 j = i + 1; j < _guardians.length; j++) {
                 require(guardian != _guardians[j].guardian, "GuardMan: Duplicate guardian");

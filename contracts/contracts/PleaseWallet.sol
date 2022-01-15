@@ -36,7 +36,7 @@ contract PleaseWallet is
 
     // wallet state
     bool internal withinSelfCall;
-    address public primarySigner;
+    address public override primarySigner;
     mapping(bytes32 => uint256) public actionEarliestSettle;
 
     // wallet config
