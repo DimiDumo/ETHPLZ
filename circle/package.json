@@ -1,0 +1,18 @@
+{
+  "name": "circle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "payment-flow.js",
+  "scripts": {
+    "start": "node --experimental-modules payment-flow.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.1.0",
+    "openpgp": "^5.0.1",
+    "uuid": "^8.3.2"
+  },
+  "type": "module"
+}

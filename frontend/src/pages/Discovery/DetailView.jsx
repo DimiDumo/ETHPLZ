@@ -1,11 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useMoralis } from 'react-moralis';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
   const infoBoxRef = useRef(null);
   const scrollBox = useRef(null);
   const [isVoted, setIsVoted] = useState(false);
+  const { isAuthenticated } = useMoralis();
+  const history = useHistory();
+
+  const buyOrLogin = () => {
+    if (isAuthenticated) {
+      history.push(`/purchase/${nft.id}`);
+      return;
+    }
+    history.push(`/login/${nft.id}`);
+  };
 
   const priceBreakdown = [
     { text: 'NFT Price', value: '14.79' },
@@ -101,7 +113,7 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
                 <button
                   type="button"
                   className="btn-buy"
-                  // onClick={}
+                  onClick={() => buyOrLogin()}
                 >
                   Buy NFT
                 </button>
