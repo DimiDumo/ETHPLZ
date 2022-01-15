@@ -7,7 +7,7 @@ import BasePage from '../BasePage/BasePage';
 import DetailView from './DetailView';
 
 const Discovery = () => {
-  const content = [{}, {}, {}, {}, {}, {}, {}].map((item) => ({
+  const content = new Array(18).fill({}).map((item) => ({
     id: uuidv4(),
     ...item,
   }));
@@ -23,18 +23,15 @@ const Discovery = () => {
     setIsDetailedViewOpen(true);
   };
   return (
-    <BasePage>
-      <div className="Discovery-Title">
-        <p className="text-7xl">Discover</p>
-      </div>
-      <div className="grid grid-cols-3 gap-2 p-2 pt-4 bg-base-100">
+    <BasePage headerTitle='Discover'>
+      <div className="grid grid-cols-3 gap-1 p-2 pt-4 bg-base-100">
         {content.map((item) => (
           <span
             key={item.id}
             role="button"
             onClick={() => handleClick(item.id)}
           >
-            <img src="holder.js/300x200" alt="" />
+            <img src="holder.js/140x140" alt="" />
           </span>
         ))}
       </div>

@@ -3,7 +3,7 @@ import BasePage from './BasePage/BasePage';
 
 const Portfolio = () => {
   return (
-    <BasePage>
+    <BasePage headerTitle='Portfolio'>
       <div>Portfolio</div>
     </BasePage>
   );

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Discovery from './pages/Discovery/Discovery';
 import Portfolio from './pages/Portfolio';
 import Profile from './pages/Profile';
-import Settings from './pages/Settings';
+import Settings from './pages/Settings/Settings';
 
 import './index.css';
 
