@@ -5,7 +5,8 @@ import classnames from 'classnames';
 import { useMoralis } from 'react-moralis';
 
 const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
-  const { signup } = useMoralis();
+  // eslint-disable-next-line no-unused-vars
+  const { signup, login } = useMoralis();
   // eslint-disable-next-line no-unused-vars
   const [userEmail, setUserEmail] = React.useState('web2user@gmail.com');
   // eslint-disable-next-line no-unused-vars
@@ -17,8 +18,7 @@ const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
 
   const handleSignup = () => {
     const localAddress = getLocalAddress();
-    console.log({ userEmail, userPassword });
-    signup(userEmail, userPassword, userEmail, {
+    login(userEmail, userPassword, userEmail, {
       localWalletAddress: localAddress,
     });
   };
