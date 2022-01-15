@@ -13,7 +13,10 @@ const BasePage = (props) => {
         <div className="phone-notch"/>
           <p className="header-title">{headerTitle}</p>
       </header>
-      <div className="container content h-10 flex-grow">{children}</div>
+      <div className="container content h-10 flex-grow">
+        {children}
+        <div className="spacer"/>
+      </div>
       <footer className="container fixed bottom-0 mx-auto flex flex-row justify-around">
         <BottomLink path="/" label="Discover" icon={LightBulbIcon} />
         <BottomLink

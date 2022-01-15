@@ -7,8 +7,9 @@ import BasePage from '../BasePage/BasePage';
 import DetailView from './DetailView';
 
 const Discovery = () => {
-  const content = new Array(18).fill({}).map((item) => ({
+  const content = new Array(18).fill({}).map((item, index) => ({
     id: uuidv4(),
+    imgSrc: `/discover-images/${index + 1}.png`,
     ...item,
   }));
 
@@ -24,15 +25,16 @@ const Discovery = () => {
   };
   return (
     <BasePage headerTitle='Discover'>
-      <div className="grid grid-cols-3 gap-1 p-2 pt-4 bg-base-100">
+      <div className="grid grid-cols-3 gap-1 pt-4 bg-base-100">
         {content.map((item) => (
-          <span
+          <div
             key={item.id}
             role="button"
             onClick={() => handleClick(item.id)}
+            className='img-preview'
           >
-            <img src="holder.js/140x140" alt="" />
-          </span>
+            <img src={item.imgSrc} alt="" />
+          </div>
         ))}
       </div>
       <DetailView
