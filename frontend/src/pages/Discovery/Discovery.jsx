@@ -16,7 +16,7 @@ const Discovery = () => {
 
   React.useEffect(() => {
     Holder.run();
-  }, []);
+  });
 
   const handleClick = (id) => {
     console.log(`clicked ${id}`);
@@ -25,9 +25,9 @@ const Discovery = () => {
   return (
     <BasePage>
       <div className="Discovery-Title">
-        <h1>Discover</h1>
+        <p className="text-7xl">Discover</p>
       </div>
-      <div className="grid grid-cols-3 gap-4 p-2 pt-4 bg-base-100">
+      <div className="grid grid-cols-3 gap-2 p-2 pt-4 bg-base-100">
         {content.map((item) => (
           <span
             key={item.id}
@@ -38,7 +38,10 @@ const Discovery = () => {
           </span>
         ))}
       </div>
-      <DetailView isModalOpen={isDetailedViewOpen} />
+      <DetailView
+        isModalOpen={isDetailedViewOpen}
+        setIsModalOpen={setIsDetailedViewOpen}
+      />
     </BasePage>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const DetailView = ({ isModalOpen }) => {
+const DetailView = ({ isModalOpen, setIsModalOpen }) => {
   return (
     <div className={classnames('modal', { 'modal-open': isModalOpen })}>
       <div className="modal-box">
@@ -12,12 +12,13 @@ const DetailView = ({ isModalOpen }) => {
           quasi eligendi. Saepe velit autem minima.
         </p>
         <div className="modal-action">
-          <label htmlFor="my-modal-2" className="btn btn-primary">
-            Accept
-          </label>
-          <label htmlFor="my-modal-2" className="btn">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setIsModalOpen(false)}
+          >
             Close
-          </label>
+          </button>
         </div>
       </div>
     </div>
@@ -26,6 +27,7 @@ const DetailView = ({ isModalOpen }) => {
 
 DetailView.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
 };
 
 export default DetailView;
