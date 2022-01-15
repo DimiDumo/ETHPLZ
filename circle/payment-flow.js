@@ -1,5 +1,6 @@
 import { createMessage, encrypt, readKey } from 'openpgp'
 import fetch from 'node-fetch';
+import { v4 as uuidv4 } from 'uuid';
 
 // enable atob and btoa in nodejs
 global.Buffer = global.Buffer || require('buffer').Buffer;
@@ -23,57 +24,105 @@ const headers = {
     'Authorization': 'Bearer ' + api_key
 };
 
-let response = await fetch('https://api-sandbox.circle.com/v1/encryption/public', { method: 'GET', headers: headers })
-    .then(res => res.json())
-    .catch(err => console.error('error:' + err));
+async function getPublicKey() {
+    let response = await fetch('https://api-sandbox.circle.com/v1/encryption/public', { method: 'GET', headers: headers })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
 
-const publicKey = response['data']['publicKey']
-const publicKeyId = response['data']['keyId']
+    return { publicKey: response['data']['publicKey'], keyId: response['data']['keyId'] }
+}
 
-const cardDetails = { number: '4007400000000007', cvv: '123' };
+async function encryptCardDetails({ number, cvv }) {
+    const decodedPublicKey = await readKey({ armoredKey: atob(publicKey) })
+    const message = await createMessage({ text: JSON.stringify({ number, cvv }) })
+    const encryptedCreditCardData = await encrypt({
+        message,
+        encryptionKeys: decodedPublicKey,
+    }).then((ciphertext) => {
+        return {
+            encryptedMessage: btoa(ciphertext),
+            keyId: keyId,
+        }
+    });
 
-const decodedPublicKey = await readKey({ armoredKey: atob(publicKey) })
-const message = await createMessage({ text: JSON.stringify(cardDetails) })
-const encryptedCreditCardData = await encrypt({
-    message,
-    encryptionKeys: decodedPublicKey,
-}).then((ciphertext) => {
-    return {
-        encryptedMessage: btoa(ciphertext),
-        keyId: publicKeyId,
-    }
-});
+    return encryptedCreditCardData;
+}
 
-const addCardBody = {
-    'idempotencyKey': '64008d21-0794-42a6-8c91-368a7d249d15',
-    'expMonth': 1,
-    'expYear': 2025,
-    'keyId': encryptedCreditCardData.keyId,
-    'encryptedData': encryptedCreditCardData,
-    'billingDetails': {
-        'line1': 'Test',
-        'line2': '',
-        'city': 'Test City',
-        'district': 'MA',
-        'postalCode': '11111',
-        'country': 'US',
-        'name': 'Customer 0001'
-    },
-    'metadata': {
-        'phoneNumber': '+12025550180',
-        'email': 'customer-0001@circle.com',
-        'sessionId': 'xxx',
-        'ipAddress': '172.33.222.1'
-    }
+async function addCard(cardDetails, encryptedCreditCardData, billingDetails, metadata) {
+    const addCardBody = {
+        'idempotencyKey': uuidv4(),
+        'expMonth': cardDetails.expMonth,
+        'expYear': cardDetails.expYear,
+        'keyId': encryptedCreditCardData.keyId,
+        'encryptedData': encryptedCreditCardData.encryptedMessage,
+        'billingDetails': billingDetails,
+        'metadata': metadata
+    };
+
+    return await fetch('https://api-sandbox.circle.com/v1/cards', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(addCardBody)
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
+async function pay(amount, metadata, encryptedCreditCardData) {
+    const paymentBody = {
+        'idempotencyKey': uuidv4(),
+        'amount': {
+            'amount': amount,
+            'currency': 'USD'
+        },
+        'verification': 'cvv',
+        'source': source,
+        'description': '',
+        'channel': '',
+        'metadata': metadata,
+        'keyId': encryptedCreditCardData.keyId,
+        'encryptedData': encryptedCreditCardData.encryptedMessage,
+    };
+
+    return await fetch('https://api-sandbox.circle.com/v1/payments', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(paymentBody)
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
+// ================usage======================
+
+const { publicKey, keyId } = await getPublicKey()
+
+const cardDetails = { number: '4007400000000007', cvv: '123', expMonth: 1, expYear: 2025 };
+const encryptedCreditCardData = await encryptCardDetails(cardDetails);
+
+const billingDetails = {
+    'line1': 'Test',
+    'line2': '',
+    'city': 'Test City',
+    'district': 'MA',
+    'postalCode': '11111',
+    'country': 'US',
+    'name': 'Customer 0001'
+};
+const metadata = {
+    'phoneNumber': '+12025550180',
+    'email': 'customer-0001@circle.com',
+    'sessionId': 'xxx',
+    'ipAddress': '172.33.222.1'
 };
 
-console.log('addCardBody: ', addCardBody);
+const addCardResult = await addCard(cardDetails, encryptedCreditCardData, billingDetails, metadata);
+console.log("addCardResult: ", addCardResult);
 
-fetch('https://api-sandbox.circle.com/v1/cards', {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(addCardBody)
-})
-    .then(res => res.json())
-    .then(json => console.log(json))
-    .catch(err => console.error('error:' + err));
+const source = {
+    'id': addCardResult["data"]["id"],
+    'type': 'card'
+};
+
+const payResult = await pay("420.69", metadata, encryptedCreditCardData);
+console.log("payResult: ", payResult);
