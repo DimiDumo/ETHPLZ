@@ -44,7 +44,12 @@ contract PleaseWallet is
     event ExecutionResult(bytes result);
     event UpdatePrimarySigner(address indexed prevPrimarySigner, address indexed newPrimarySigner);
 
-    function init(address _initialSigner, address _guardianManager) external override initializer {
+    function init(
+        address _initialSigner,
+        address _guardianManager,
+        address[] calldata _initialGuardians,
+        uint256 _initialThreshhold
+    ) external override initializer {
         __ERC721Holder_init();
         __ERC1155Holder_init();
         // ensure uuid is different between chains, versions and individual wallets
@@ -52,6 +57,7 @@ contract PleaseWallet is
         primarySigner = _initialSigner;
 
         guardianManager = IGuardianManager(_guardianManager);
+        IGuardianManager(_guardianManager).updateSettings(_initialGuardians, _initialThreshhold);
 
         actionDelay[PleaseWallet.queueAction.selector] = NO_DELAY;
         actionDelay[PleaseWallet.invalidateAction.selector] = NO_DELAY;
@@ -77,7 +83,6 @@ contract PleaseWallet is
 
     function upgradeSelfTo(address _newImplementation, bytes calldata _initCallData)
         external
-        override
         onlyWallet
     {
         _upgradeToAndCall(_newImplementation, _initCallData, false);
@@ -148,6 +153,10 @@ contract PleaseWallet is
         address callSigner = actionHash.toEthSignedMessageHash().recover(_signature);
         require(callSigner == primarySigner, "PLZWallet: Not primary key");
         _selfCall(callData);
+    }
+
+    function getImplementation() public view returns (address) {
+        return _getImplementation();
     }
 
     function isUnregistered(bytes4 _actionSelector) public view returns (bool) {
