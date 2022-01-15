@@ -6,9 +6,24 @@ Moralis.Cloud.define("resetWalletAddress", async (request) => {
     // super secret private key
     const privateKey = "0xd7325de5c2c1cf0009fac77d3d04a9c004b038883446b065871bc3e831dcd098";
     web3.eth.accounts.privateKeyToAccount(privateKey);
-    const sig = web3.eth.accounts.sign("Some data", privateKey);
+
+    // TODO: Sign something useful
+    const email = request.user.get("email");
+    const sig = web3.eth.accounts.sign(email, privateKey);
 
     return sig;
+}, {
+    requireUser: true
+});
+
+Moralis.Cloud.define("generateContractWallet", async (request) => {
+    // TODO: Actually generate contract address
+    if (!request.user.get("contractWalletAddress")) {
+        request.user.set("contractWalletAddress", "0x0000000000000000000000000000000000000000");
+        request.user.save();
+        return 1;
+    }
+    return 2;
 }, {
     requireUser: true
 });
