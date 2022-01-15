@@ -6,7 +6,8 @@ module.exports = {
   },
   globals: {
     Moralis: 'readonly',
-    document: 'readonly'
+    document: 'readonly',
+    CLOUD_ENV: 'readonly'
   },
   extends: 'eslint:recommended',
   parserOptions: {
