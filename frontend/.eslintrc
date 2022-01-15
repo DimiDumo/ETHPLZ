@@ -17,6 +17,8 @@
     "prettier/prettier": [
       "warn", { "singleQuote": true, "endOfLine": "auto" }
     ],
-    "arrow-body-style": "off"
+    "arrow-body-style": "off",
+    "react/forbid-prop-types": "off",
+    "no-await-in-loop": "off"
   }
 }
