@@ -24,8 +24,9 @@ contract PleaseWallet is
 
     uint256 internal constant UNREGISTERED = 0;
     uint256 internal constant NO_DELAY = 1;
-    uint256 internal constant BASIC_SECURITY_DELAY = 2 days;
-    uint256 internal constant HIGH_SECURITY_DELAY = 7 days;
+    // TODO: change delays to full length for production deploy
+    uint256 internal constant BASIC_SECURITY_DELAY = 2 minutes;
+    uint256 internal constant HIGH_SECURITY_DELAY = 5 minutes;
 
     uint256 internal constant ACTION_IS_NEW = 0;
     uint256 internal constant ACTION_EXECUTED = 1;
