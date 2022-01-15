@@ -24,14 +24,14 @@ const Discovery = () => {
     setIsDetailedViewOpen(true);
   };
   return (
-    <BasePage headerTitle='Discover'>
+    <BasePage headerTitle="Discover">
       <div className="grid grid-cols-3 gap-1 pt-4 bg-base-100">
         {content.map((item) => (
           <div
             key={item.id}
             role="button"
             onClick={() => handleClick(item.id)}
-            className='img-preview'
+            className="img-preview"
           >
             <img src={item.imgSrc} alt="" />
           </div>
