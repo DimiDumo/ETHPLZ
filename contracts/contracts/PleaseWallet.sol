@@ -2,6 +2,7 @@
 pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./IGuardianManager.sol";
 
 contract PleaseWallet {
     using ECDSA for bytes32;
@@ -23,10 +24,12 @@ contract PleaseWallet {
     // wallet config
     mapping(bytes4 => uint256) public actionDelay;
     mapping(bytes4 => bool) public actionInstant;
+    IGuardianManager public guardianManager;
 
     event ActionQueued(bytes32 indexed actionHash, uint256 earliestSettle);
     event ActionInvalidated(bytes32 indexed actionHash);
     event ExecutionResult(bytes result);
+    event UpdatePrimarySigner(address indexed prevPrimarySigner, address indexed newPrimarySigner);
 
     constructor(address _initialSigner) {
         // ensure uuid is different between chains, versions and individual wallets
@@ -39,6 +42,17 @@ contract PleaseWallet {
     modifier onlyWallet() {
         require(msg.sender == address(this), "PleaseWallet: Not wallet");
         _;
+    }
+
+    modifier onlyGuardian() {
+        require(msg.sender == address(guardianManager), "PleaseWallet: Not guardian");
+        _;
+    }
+
+    function resetPrimarySigner(address _newPrimarySigner) external onlyGuardian {
+        address prevPrimarySigner = primarySigner;
+        primarySigner = _newPrimarySigner;
+        emit UpdatePrimarySigner(prevPrimarySigner, _newPrimarySigner);
     }
 
     function queueAction(
