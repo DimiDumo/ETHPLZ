@@ -32,7 +32,11 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
         onClick={() => setIsVoted(false)}
       >
         <span>
-          <img className="inline float-left ml-3 mt-1" src="/heart.png" alt="<3" />
+          <img
+            className="inline float-left ml-3 mt-1"
+            src="/heart.png"
+            alt="<3"
+          />
           <div className="inline ml-2 btn-voting-text">
             <div className="btn-voting-text-inside">1035</div>
           </div>

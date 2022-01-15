@@ -223,3 +223,20 @@ footer {
 .price-bold {
   font-weight: 700;
 }
+
+.nav-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.active-page-line {
+  width: 40px;
+  height: 2px;
+  border-radius: 30px;
+  background: #C4C4C4;
+  margin-top: 6px;
+}
+
+.page-inactive {
+  display: none;
+}

@@ -17,7 +17,7 @@ const Portfolio = () => {
   }, [isAuthenticated]);
 
   return (
-    <BasePage headerTitle="Portfolio">
+    <BasePage headerTitle="Portfolio" pageName="portfolio">
       <div>Portfolio</div>
       <SignupModal
         isModalOpen={isSignupModalOpen}
