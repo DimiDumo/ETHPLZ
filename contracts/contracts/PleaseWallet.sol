@@ -3,11 +3,19 @@ pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
 import "./IGuardianManager.sol";
+import "./IPleaseWallet.sol";
 
-contract PleaseWallet is ERC721Holder, ERC1155Holder {
+contract PleaseWallet is
+    IPleaseWallet,
+    Initializable,
+    ERC1967Upgrade,
+    ERC721HolderUpgradeable,
+    ERC1155HolderUpgradeable
+{
     using ECDSA for bytes32;
 
     uint256 internal constant UNREGISTERED = 0;
@@ -36,7 +44,9 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
     event ExecutionResult(bytes result);
     event UpdatePrimarySigner(address indexed prevPrimarySigner, address indexed newPrimarySigner);
 
-    constructor(address _initialSigner, address _guardianManager) {
+    function init(address _initialSigner, address _guardianManager) external override initializer {
+        __ERC721Holder_init();
+        __ERC1155Holder_init();
         // ensure uuid is different between chains, versions and individual wallets
         WALLET_UUID = keccak256(abi.encode("PLZWallet v0.1 UUID", block.chainid, address(this)));
         primarySigner = _initialSigner;
@@ -46,6 +56,7 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
         actionDelay[PleaseWallet.queueAction.selector] = NO_DELAY;
         actionDelay[PleaseWallet.invalidateAction.selector] = NO_DELAY;
         actionDelay[PleaseWallet.sendER20.selector] = BASIC_SECURITY_DELAY;
+        actionDelay[PleaseWallet.upgradeSelfTo.selector] = HIGH_SECURITY_DELAY;
         actionDelay[PleaseWallet.updateRecoverySettings.selector] = HIGH_SECURITY_DELAY;
     }
 
@@ -63,6 +74,14 @@ contract PleaseWallet is ERC721Holder, ERC1155Holder {
     }
 
     receive() external payable {}
+
+    function upgradeSelfTo(address _newImplementation, bytes calldata _initCallData)
+        external
+        override
+        onlyWallet
+    {
+        _upgradeToAndCall(_newImplementation, _initCallData, false);
+    }
 
     function sendER20(
         address _token,
