@@ -13,10 +13,10 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
 
   const buyOrLogin = () => {
     if (isAuthenticated) {
-      console.log('going to buy page');
+      history.push(`/purchase/${nft.id}`);
       return;
     }
-    history.push('/login');
+    history.push(`/login/${nft.id}`);
   };
 
   const priceBreakdown = [
