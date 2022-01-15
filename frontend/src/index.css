@@ -21,6 +21,7 @@ code {
   height: 117px;
   background: #f8f8f8;
   width: 100%;
+  border-bottom: 1px solid #c4c4c4;
 }
 
 .phone-notch {
@@ -47,4 +48,13 @@ footer {
 
 .nav-icons {
   padding: 8px;
+}
+
+.settings-item {
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 33px;
+  margin: 8px 10px;
 }
