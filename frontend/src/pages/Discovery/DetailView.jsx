@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
   const infoBoxRef = useRef(null);
   const scrollBox = useRef(null);
+  const [isVoted, setIsVoted] = useState(false);
 
   const priceBreakdown = [
     { text: 'NFT Price', value: '14.79' },
@@ -13,12 +14,42 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
     { text: 'Total', value: '30.29', bold: true },
   ].map((item) => (
     <>
-      <div className={classnames('col-span-2', { 'price-bold': item.bold })}>{item.text}</div>
+      <div className={classnames('col-span-2', { 'price-bold': item.bold })}>
+        {item.text}
+      </div>
       <div className={classnames('col-span-1', { 'price-bold': item.bold })}>
         <span className="float-right">€{item.value}</span>
       </div>
     </>
   ));
+
+  let votingButton;
+  if (isVoted) {
+    votingButton = (
+      <button
+        type="button"
+        className="btn-voting-active"
+        onClick={() => setIsVoted(false)}
+      >
+        <span>
+          <img className="inline float-left ml-3 mt-1" src="/heart.png" alt="<3" />
+          <div className="inline ml-2 btn-voting-text">
+            <div className="btn-voting-text-inside">1035</div>
+          </div>
+        </span>
+      </button>
+    );
+  } else {
+    votingButton = (
+      <button
+        type="button"
+        className="btn-voting-hollow float-right"
+        onClick={() => setIsVoted(true)}
+      >
+        <img src="/heart.png" alt="<3" />
+      </button>
+    );
+  }
 
   useEffect(() => {
     if (isModalOpen) {
@@ -35,13 +66,13 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
       <div className="my-modal-inner" ref={scrollBox}>
         <div className="py-7 px-9">
           <img className="nft-full-img" src={nft.imgSrc} alt="" />
-          <div className="mt-3 mb-6" ref={infoBoxRef}>
-            <div className="grid grid-cols-3">
-              <div className="col-span-2">
+          <div className="mt-4 mb-6" ref={infoBoxRef}>
+            <div className="grid grid-cols-5">
+              <div className="col-span-3">
                 <h1>{nft.title}</h1>
                 <p>{nft.author}</p>
               </div>
-              <div className="col-span-1">Voting coming soon</div>
+              <div className="col-span-2">{votingButton}</div>
             </div>
             <h1 className="mt-5">Description</h1>
             <p className="description">{nft.description}</p>
@@ -66,7 +97,7 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
                 <button
                   type="button"
                   className="btn-buy"
-                  onClick={() => setIsModalOpen(false)}
+                  // onClick={}
                 >
                   Buy NFT
                 </button>

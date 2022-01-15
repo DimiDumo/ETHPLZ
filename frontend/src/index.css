@@ -153,9 +153,42 @@ footer {
   font-weight: 700;
 }
 
+.btn-voting-hollow {
+  padding: 10px 18px;
+  color: #fff;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  font-weight: 700;
+}
+
+.btn-voting-text {
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  position: relative;
+}
+
+.btn-voting-text-inside {
+  position: absolute;
+  top: 0;
+  left: -30px;
+}
+
 .btn-buy {
   width: 100%;
   padding: 10px 0;
+  background: #00D1FF;
+  border: 2px solid #00D1FF;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.btn-voting-active {
+  width: 100%;
+  padding: 6px 0;
   background: #00D1FF;
   border: 2px solid #00D1FF;
   box-sizing: border-box;
