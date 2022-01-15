@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.11;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import "./IGuardianManager.sol";
 import "./IPleaseWallet.sol";
 
@@ -17,6 +20,7 @@ contract PleaseWallet is
     ERC1155HolderUpgradeable
 {
     using ECDSA for bytes32;
+    using Address for address payable;
 
     uint256 internal constant UNREGISTERED = 0;
     uint256 internal constant NO_DELAY = 1;
@@ -61,7 +65,12 @@ contract PleaseWallet is
 
         actionDelay[PleaseWallet.queueAction.selector] = NO_DELAY;
         actionDelay[PleaseWallet.invalidateAction.selector] = NO_DELAY;
+
+        actionDelay[PleaseWallet.sendNative.selector] = BASIC_SECURITY_DELAY;
         actionDelay[PleaseWallet.sendER20.selector] = BASIC_SECURITY_DELAY;
+        actionDelay[PleaseWallet.sendER721.selector] = BASIC_SECURITY_DELAY;
+        actionDelay[PleaseWallet.sendERC1155.selector] = BASIC_SECURITY_DELAY;
+
         actionDelay[PleaseWallet.upgradeSelfTo.selector] = HIGH_SECURITY_DELAY;
         actionDelay[PleaseWallet.updateRecoverySettings.selector] = HIGH_SECURITY_DELAY;
     }
@@ -88,12 +97,33 @@ contract PleaseWallet is
         _upgradeToAndCall(_newImplementation, _initCallData, false);
     }
 
+    function sendNative(address payable _recipient, uint256 _amount) external onlyWallet {
+        _recipient.sendValue(_amount);
+    }
+
     function sendER20(
         address _token,
         address _recipient,
         uint256 _amount
     ) external onlyWallet {
         IERC20(_token).transfer(_recipient, _amount);
+    }
+
+    function sendER721(
+        address _token,
+        address _recipient,
+        uint256 _tokenId
+    ) external onlyWallet {
+        IERC721(_token).safeTransferFrom(address(this), _recipient, _tokenId);
+    }
+
+    function sendERC1155(
+        address _token,
+        address _recipient,
+        uint256 _tokenId,
+        uint256 _amount
+    ) external onlyWallet {
+        IERC1155(_token).safeTransferFrom(address(this), _recipient, _tokenId, _amount, "");
     }
 
     function resetPrimarySigner(address _newPrimarySigner) external onlyGuardian {
