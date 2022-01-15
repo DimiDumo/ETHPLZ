@@ -10,18 +10,22 @@ const Discovery = () => {
   const content = new Array(18).fill({}).map((item, index) => ({
     id: uuidv4(),
     imgSrc: `/discover-images/${index + 1}.png`,
+    title: "The Corridor",
+    author: "NathFT",
+    description: "As I walk through the corridor, where I reconsider my brain, I take a look at the lights, and realise there is a lot of gain...",
     ...item,
   }));
 
   const [isDetailedViewOpen, setIsDetailedViewOpen] = React.useState(false);
+  const [activeNFT, setActiveNFT] = React.useState({});
 
   React.useEffect(() => {
     Holder.run();
   });
 
-  const handleClick = (id) => {
-    console.log(`clicked ${id}`);
+  const handleClick = (nft) => {
     setIsDetailedViewOpen(true);
+    setActiveNFT(nft);
   };
   return (
     <BasePage headerTitle="Discover">
@@ -30,7 +34,7 @@ const Discovery = () => {
           <div
             key={item.id}
             role="button"
-            onClick={() => handleClick(item.id)}
+            onClick={() => handleClick(item)}
             className="img-preview"
           >
             <img src={item.imgSrc} alt="" />
@@ -40,6 +44,7 @@ const Discovery = () => {
       <DetailView
         isModalOpen={isDetailedViewOpen}
         setIsModalOpen={setIsDetailedViewOpen}
+        nft={activeNFT}
       />
     </BasePage>
   );
