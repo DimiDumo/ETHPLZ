@@ -9,7 +9,7 @@ contract PleaseWalletFactory is Ownable {
     address public defaultImplementation;
     address public defaultGuardianManager;
 
-    event NewWalletCreated(address walletAddress);
+    event NewWalletCreated(address indexed walletAddress, address indexed initialSigner);
 
     constructor(address _defaultImplementation, address _defaultGuardianManager) Ownable() {
         defaultImplementation = _defaultImplementation;
@@ -34,7 +34,7 @@ contract PleaseWalletFactory is Ownable {
             initialGuardians,
             1
         );
-        emit NewWalletCreated(address(proxy));
+        emit NewWalletCreated(address(proxy), _initialSigner);
         return address(proxy);
     }
 }
