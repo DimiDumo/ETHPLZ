@@ -44,8 +44,6 @@ contract GuardianManager is IGuardianManager {
         GuardianInput[] calldata _guardians,
         bytes calldata _callData
     ) external override {
-        /* O(n^2) algorithm used as using storage based mapping likely more
-           expensive */
         bytes32 callHash = keccak256(abi.encode(_targetWallet, _callData));
         RecoverySettings storage settings = recoverySettingsOf[_targetWallet];
         uint256 currentIteration = settings.currentIteration;
@@ -53,6 +51,8 @@ contract GuardianManager is IGuardianManager {
         require(currentIteration > 0, "GuardMan: No settings");
         require(threshhold <= _guardians.length, "GuardMan: Insufficient guardians");
 
+        /* O(n^2) algorithm used because O(n) solution would require storage
+           mappings which overall would be more expensive */
         for (uint256 i; i < _guardians.length; i++) {
             GuardianInput calldata guardianInp = _guardians[i];
             address guardian = guardianInp.guardian;
