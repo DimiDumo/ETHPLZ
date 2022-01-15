@@ -4,24 +4,36 @@ import classnames from 'classnames';
 
 import { useMoralis } from 'react-moralis';
 
+import localWallet from '../../domain/localWallet';
+
 const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
-  // eslint-disable-next-line no-unused-vars
   const { signup, login } = useMoralis();
   // eslint-disable-next-line no-unused-vars
   const [userEmail, setUserEmail] = React.useState('web2user@gmail.com');
   // eslint-disable-next-line no-unused-vars
   const [userPassword, setUserPassword] = React.useState('nfts_are_cool_1234');
 
-  const getLocalAddress = () => {
-    return '0x0000000000000000000000000000000000000000';
-  };
-
   const handleSignup = () => {
-    const localAddress = getLocalAddress();
-    login(userEmail, userPassword, userEmail, {
-      localWalletAddress: localAddress,
+    const generatedAddress = localWallet.createWallet();
+    signup(userEmail, userPassword, userEmail, {
+      localWalletAddress: generatedAddress,
     });
   };
+
+  const handleLogin = () => {
+    login(userEmail, userPassword);
+  };
+
+  const loginOrSignup = () => {
+    const localAddress = localWallet.getAddress();
+    if (!localAddress) {
+      handleSignup();
+      return;
+    }
+
+    handleLogin();
+  };
+
   return (
     <div className={classnames('modal', { 'modal-open': isModalOpen })}>
       <div className="modal-box">
@@ -61,7 +73,7 @@ const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={handleSignup}
+            onClick={loginOrSignup}
           >
             Create Account
           </button>
