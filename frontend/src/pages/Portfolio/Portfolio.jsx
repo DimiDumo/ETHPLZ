@@ -1,28 +1,24 @@
 import React from 'react';
 import { useMoralis } from 'react-moralis';
+import { useHistory } from 'react-router-dom';
 
 import BasePage from '../BasePage/BasePage';
-import SignupModal from './SignupModal';
 
 const Portfolio = () => {
   // eslint-disable-next-line no-unused-vars
-  const { isAuthenticated, user } = useMoralis();
+  const { isAuthenticated } = useMoralis();
 
-  console.log({ user });
-
-  const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
+  const history = useHistory();
 
   React.useEffect(() => {
-    setIsSignupModalOpen(!isAuthenticated);
-  }, [isAuthenticated]);
+    if (!isAuthenticated) {
+      history.push('/login');
+    }
+  }, [isAuthenticated, history]);
 
   return (
     <BasePage headerTitle="Portfolio">
       <div>Portfolio</div>
-      <SignupModal
-        isModalOpen={isSignupModalOpen}
-        setIsModalOpen={setIsSignupModalOpen}
-      />
     </BasePage>
   );
 };

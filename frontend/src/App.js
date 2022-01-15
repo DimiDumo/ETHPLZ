@@ -6,6 +6,7 @@ import Discovery from './pages/Discovery/Discovery';
 import Portfolio from './pages/Portfolio/Portfolio';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings/Settings';
+import SignIn from './pages/UserManagement/SignIn';
 
 import './index.css';
 
@@ -25,6 +26,9 @@ export default function App() {
           </Route>
           <Route path="/portfolio">
             <Portfolio />
+          </Route>
+          <Route path="/login">
+            <SignIn />
           </Route>
           <Route path="/:nftId?">
             <Discovery />
