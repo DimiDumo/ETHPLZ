@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
 // import { v4 as uuidv4 } from 'uuid';
 import { useParams, useHistory } from 'react-router-dom';
@@ -6,7 +5,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import BasePage from '../BasePage/BasePage';
 import DetailView from './DetailView';
 
-import jsonContent from './content.json';
+import content from './content.json';
 
 const Discovery = () => {
   // const content = new Array(18).fill({}).map((item, index) => ({
@@ -19,8 +18,6 @@ const Discovery = () => {
   //   ...item,
   // }));
   // console.log(JSON.stringify(content));
-
-  const content = jsonContent;
 
   const history = useHistory();
   const { nftId } = useParams();
