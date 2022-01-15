@@ -5,7 +5,10 @@ module.exports = {
     node: true
   },
   globals: {
-    task: 'readonly'
+    task: 'readonly',
+    describe: 'readonly',
+    before: 'readonly',
+    it: 'readonly'
   },
   extends: 'eslint:recommended',
   parserOptions: {

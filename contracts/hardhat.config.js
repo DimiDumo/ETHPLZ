@@ -1,6 +1,8 @@
 require('dotenv').config()
 require('@nomiclabs/hardhat-ethers')
 require('@nomiclabs/hardhat-etherscan')
+require('@nomiclabs/hardhat-waffle')
+require('hardhat-gas-reporter')
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -21,9 +23,11 @@ task('update-implementation')
 module.exports = {
   solidity: {
     version: '0.8.11',
-    optimizer: {
-      enabled: true,
-      runs: 10_000
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 10_000
+      }
     }
   },
   networks: {
@@ -34,5 +38,9 @@ module.exports = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY
+  },
+  gasReporter: {
+    enabled: true,
+    currency: 'USD'
   }
 }
