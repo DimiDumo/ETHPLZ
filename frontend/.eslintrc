@@ -19,6 +19,7 @@
     ],
     "arrow-body-style": "off",
     "react/forbid-prop-types": "off",
-    "no-await-in-loop": "off"
+    "no-await-in-loop": "off",
+    "no-unused-vars" :"off"
   }
 }

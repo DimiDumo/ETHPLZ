@@ -3,6 +3,7 @@ import { useMoralis } from 'react-moralis';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useHistory } from 'react-router-dom';
+import localStorage from '../../domain/localStorage';
 // import getNftDetails from './getNftDetails';
 
 const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
@@ -14,7 +15,13 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
 
   const buyOrLogin = () => {
     if (isAuthenticated) {
-      history.push(`/purchase/${nft.id}`);
+      const paymentMethod = localStorage.read('paymentMethodInfo', null);
+      console.log('paymentMethod: ', paymentMethod);
+      if (!paymentMethod) {
+        history.push(`/set-up-payment/${nft.id}`);
+        return;
+      }
+      history.push(`/portfolio/${encodeURIComponent(nft.imgSrc)}`);
       return;
     }
     history.push(`/login/${nft.id}`);
@@ -86,7 +93,7 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
       document.querySelector('body').classList.remove('noscroll');
       scrollBox.current.scrollTo({ top: 0 });
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, nft]);
 
   return (
     <div className={classnames('my-modal', { 'my-modal-open': isModalOpen })}>

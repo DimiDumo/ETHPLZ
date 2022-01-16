@@ -1,32 +1,32 @@
-import React from "react";
+import React from 'react';
 
-import { useMoralis, useMoralisCloudFunction } from "react-moralis";
-import { useHistory } from "react-router-dom";
-import * as openpgp from "openpgp";
+import { useMoralisCloudFunction } from 'react-moralis';
+import { useHistory } from 'react-router-dom';
+import * as openpgp from 'openpgp';
 
-import BasePage from "../BasePage/BasePage";
+import BasePage from '../BasePage/BasePage';
 
-import localStorage from "../../domain/localStorage";
+import localStorage from '../../domain/localStorage';
 
 const CreditCardState = {
-  NONE: "NONE",
-  CLICKED: "CLICKED",
-  GOT_PUBLIC_KEY: "GOT_PUBLIC_KEY",
-  ENC_CARD: "ENC_CARD",
-  ADDED_CARD: "ADDED_CARD",
+  NONE: 'NONE',
+  CLICKED: 'CLICKED',
+  GOT_PUBLIC_KEY: 'GOT_PUBLIC_KEY',
+  ENC_CARD: 'ENC_CARD',
+  ADDED_CARD: 'ADDED_CARD',
 };
 
 const Payment = () => {
-  const { isAuthenticated } = useMoralis();
+  // const { isAuthenticated } = useMoralis();
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
-  const [nameOnCard, setNameOnCard] = React.useState("Customer 0001");
+  const [nameOnCard, setNameOnCard] = React.useState('Customer 0001');
   // eslint-disable-next-line no-unused-vars
-  const [cardNumber, setCardNumber] = React.useState("4007400000000007");
+  const [cardNumber, setCardNumber] = React.useState('4007400000000007');
   // eslint-disable-next-line no-unused-vars
-  const [expDate, setExpDate] = React.useState("01-2023");
+  const [expDate, setExpDate] = React.useState('01-2023');
   // eslint-disable-next-line no-unused-vars
-  const [cardCvv, setCardCvv] = React.useState("123");
+  const [cardCvv, setCardCvv] = React.useState('123');
   // eslint-disable-next-line no-unused-vars
   const [fastTx, setFastTx] = React.useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -40,25 +40,25 @@ const Payment = () => {
   const [publicKeyData, setPublicKeyData] = React.useState(null);
 
   const cardDetails = {
-    number: "4007400000000007",
-    cvv: "123",
+    number: '4007400000000007',
+    cvv: '123',
     expMonth: 1,
     expYear: 2025,
   };
   const billingDetails = {
-    line1: "Test",
-    line2: "",
-    city: "Test City",
-    district: "MA",
-    postalCode: "11111",
-    country: "US",
-    name: "Customer 0001",
+    line1: 'Test',
+    line2: '',
+    city: 'Test City',
+    district: 'MA',
+    postalCode: '11111',
+    country: 'US',
+    name: 'Customer 0001',
   };
   const metadata = {
-    phoneNumber: "+12025550180",
-    email: "customer-0001@circle.com",
-    sessionId: "xxx",
-    ipAddress: "172.33.222.1",
+    phoneNumber: '+12025550180',
+    email: 'customer-0001@circle.com',
+    sessionId: 'xxx',
+    ipAddress: '172.33.222.1',
   };
 
   const encryptCardDetails = async function (
@@ -100,12 +100,12 @@ const Payment = () => {
   };
 
   const publicKeyCloudFunction = useMoralisCloudFunction(
-    "circle_publicKey",
+    'circle_publicKey',
     {}
   );
 
   const addCardCloudFunction = useMoralisCloudFunction(
-    "circle_addCard",
+    'circle_addCard',
     {
       cardDetails,
       encryptedCreditCardData,
@@ -115,10 +115,10 @@ const Payment = () => {
     { autoFetch: false }
   );
 
-  React.useEffect(() => {
-    if (!isAuthenticated) return;
-    history.push(`/set-up-payment`);
-  }, [isAuthenticated, history]);
+  // React.useEffect(() => {
+  //   if (!isAuthenticated) return;
+  //   history.push(`/set-up-payment`);
+  // }, [isAuthenticated, history]);
 
   React.useEffect(() => {
     if (
@@ -135,20 +135,32 @@ const Payment = () => {
         break;
       }
       case CreditCardState.CLICKED: {
-        const { publicKey, keyId } = await awaitCf(publicKeyCloudFunction);
-        setPublicKeyData({ publicKey, keyId });
-        setCreditCardState(CreditCardState.GOT_PUBLIC_KEY);
+        // dummy section
+        localStorage.write('paymentMethodInfo', {
+          publicKeyData: '',
+          source: '',
+          encryptedCreditCardData: '',
+        });
+        setTimeout(() => {
+          history.goBack();
+        }, 2000);
         break;
+        // ==================
+
+        // const { publicKey, keyId } = await awaitCf(publicKeyCloudFunction);
+        // setPublicKeyData({ publicKey, keyId });
+        // setCreditCardState(CreditCardState.GOT_PUBLIC_KEY);
+        // break;
       }
       case CreditCardState.GOT_PUBLIC_KEY: {
         const { publicKey, keyId } = publicKeyData;
-        console.log("publicKey: ", publicKey);
-        console.log("keyId: ", keyId);
+        console.log('publicKey: ', publicKey);
+        console.log('keyId: ', keyId);
 
         const ed = await encryptCardDetails(publicKey, keyId, cardDetails);
         setEncryptedCreditCardData(ed);
 
-        console.log("encryptedCreditCardData: ", ed);
+        console.log('encryptedCreditCardData: ', ed);
 
         setCreditCardState(CreditCardState.ENC_CARD);
         break;
@@ -158,19 +170,21 @@ const Payment = () => {
         break;
       }
       case CreditCardState.ADDED_CARD: {
-        console.log("add res: ", addCardCloudFunction.data);
+        console.log('add res: ', addCardCloudFunction.data);
         const source = {
           id: addCardCloudFunction.data.id,
-          type: "card",
+          type: 'card',
         };
-        console.log("source: ", source);
-        localStorage.write("paymentMethodInfo", {
+        console.log('source: ', source);
+        localStorage.write('paymentMethodInfo', {
           publicKeyData,
           source,
           encryptedCreditCardData,
         });
 
-        alert("DONE! TODO: Go to the next page?");
+        // const nftId = window.location.href.split('/').pop()
+        // history.push('/')
+        // history.pop();
 
         // TODO: Go to the next page?
         break;
@@ -184,7 +198,6 @@ const Payment = () => {
   return (
     <BasePage headerTitle="Payment" arrowBack pageName="settings">
       <div className="p-4 payment-page h-screen">
-        <div className="payment-spacer" />
         <h1>Confirm payment details:</h1>
         <div className="form-control mb-5">
           <label className="label">
@@ -280,7 +293,7 @@ const Payment = () => {
           </label>
         </div>
         <div className="">
-          <div className="grid grid-cols-3 mt-7">
+          <div className="grid grid-cols-3 mt-2">
             <div className="col-span-2">
               <button
                 type="button"
