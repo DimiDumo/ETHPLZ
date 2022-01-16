@@ -4,6 +4,8 @@
     <title>Vanilla Boilerplate</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script src="https://unpkg.com/openpgp@5.0.1/dist/openpgp.min.js"></script>
+    <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
   </head>
 
   <body>
@@ -12,44 +14,17 @@
     <button id="btn-login">Moralis Metamask Login</button>
     <button id="btn-logout">Logout</button>
     <button id="btn-gen">Generate Contract Wallet</button>
+    <button id="btn-circle">Circle Payment</button>
 
-    <form
-      action="javascript:emailPasswordSignup(email_signup.value, password_signup.value)"
-    >
-      <input
-        type="text"
-        placeholder="Email"
-        name="email"
-        id="email_signup"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        name="password"
-        id="password_signup"
-        required
-      />
+    <form action="javascript:emailPasswordSignup(email_signup.value, password_signup.value)">
+      <input type="text" placeholder="Email" name="email" id="email_signup" required />
+      <input type="password" placeholder="Password" name="password" id="password_signup" required />
       <button type="submit">Signup</button>
     </form>
 
-    <form
-      action="javascript:emailPasswordLogin(email_login.value, password_login.value)"
-    >
-      <input
-        type="text"
-        placeholder="Email"
-        name="email"
-        id="email_login"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        name="password"
-        id="password_login"
-        required
-      />
+    <form action="javascript:emailPasswordLogin(email_login.value, password_login.value)">
+      <input type="text" placeholder="Email" name="email" id="email_login" required />
+      <input type="password" placeholder="Password" name="password" id="password_login" required />
       <button type="submit">Login</button>
 
       <div class="container" style="background-color: #f1f1f1">
