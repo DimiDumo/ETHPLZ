@@ -3,7 +3,7 @@ import BasePage from './BasePage/BasePage';
 
 const Profile = () => {
   return (
-    <BasePage>
+    <BasePage pageName="profile">
       <div>Profile</div>
     </BasePage>
   );
