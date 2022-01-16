@@ -2,6 +2,9 @@ Moralis.Cloud.define(
   'createNewUserWallet',
   async ({ user, params }) => {
     const { primaryKey } = params
+    const logger = Moralis.Cloud.getLogger()
+
+    logger.info(`params: ${JSON.stringify(params)}`)
 
     if (user.get('localWalletAddress') !== '0x0000000000000000000000000000000000000000') {
       throw new Error('Wallet already registered')
@@ -10,8 +13,11 @@ Moralis.Cloud.define(
     const { data } = await api().post('/create-new-wallet', { primaryKey })
 
     const { walletUUID, newSmartWallet } = data
+    logger.info(`smart wallet: ${newSmartWallet}`)
     user.set('localWalletAddress', newSmartWallet)
+    logger.info(`uuid: ${walletUUID}`)
     user.set('walletUUID', walletUUID)
+    logger.info(`prim key: ${primaryKey}`)
     user.set('currentPrimaryKey', primaryKey)
     await user.save(null, { useMasterKey: true })
 
