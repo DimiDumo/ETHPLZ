@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useMoralis } from 'react-moralis';
 import BottomLink from './BottomLink';
 
 const BasePage = (props) => {
   const { children, headerTitle, rightElem, pageName, arrowBack } = props;
-  const [isLoggedIn] = useState(false);
+  // const [isLoggedIn] = useState(false);
+  const { isAuthenticated } = useMoralis();
+
   return (
     <div className="flex h-screen flex-col">
       <header className="BasePage-Header fixed">
@@ -33,7 +36,7 @@ const BasePage = (props) => {
             path="/profile"
             label="Profile"
             imgSrc={
-              isLoggedIn ? '/profile_active.png' : '/profile_inactive.png'
+              isAuthenticated ? '/profile_active.png' : '/profile_inactive.png'
             }
             isActive={pageName === 'profile'}
           />
