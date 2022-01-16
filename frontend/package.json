@@ -17,6 +17,7 @@
     "holderjs": "^2.9.9",
     "lodash": "^4.17.21",
     "moralis": "^0.0.184",
+    "openpgp": "^5.0.1",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

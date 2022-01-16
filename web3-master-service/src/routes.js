@@ -38,22 +38,25 @@ async function getExistingWallet(signerAddress) {
   return firstWallet
 }
 
+async function getSmartWallet(primaryKey) {
+  const walletFactory = getContract(PleaseWalletFactory)
+  const existingWallet = await getExistingWallet(primaryKey)
+  if (existingWallet) return existingWallet
+  const tx = await walletFactory.createDefaultWallet(primaryKey)
+  const { events } = await tx.wait()
+  const [newWalletCreation] = events.filter(({ event }) => event === 'NewWalletCreated')
+
+  return newWalletCreation.args.walletAddress
+}
+
 router.post(
   '/create-new-wallet',
   createHandler(async ({ body }) => {
-    let { primaryKey, provideNewWalletAddress = false } = body
+    let { primaryKey } = body
     primaryKey = validateAddress(primaryKey)
-    const walletFactory = getContract(PleaseWalletFactory)
-    const existingWallet = await getExistingWallet(primaryKey)
-    if (existingWallet) return existingWallet
-    const tx = await walletFactory.createDefaultWallet(primaryKey)
-    if (!provideNewWalletAddress) {
-      return null
-    }
-    const { events } = await tx.wait()
-    const [newWalletCreation] = events.filter(({ event }) => event === 'NewWalletCreated')
-
-    return newWalletCreation.args.walletAddress
+    const newSmartWallet = await getSmartWallet(primaryKey)
+    const walletUUID = await getWallet(newSmartWallet).WALLET_UUID()
+    return { walletUUID, newSmartWallet }
   })
 )
 
