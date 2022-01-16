@@ -6,6 +6,8 @@ import * as openpgp from "openpgp";
 
 import BasePage from "../BasePage/BasePage";
 
+import localStorage from "../../domain/localStorage";
+
 const CreditCardState = {
   NONE: "NONE",
   CLICKED: "CLICKED",
@@ -161,7 +163,16 @@ const Payment = () => {
           id: addCardCloudFunction.data.id,
           type: "card",
         };
-        // TODO: Save globally "source" and "encryptedCreditCardData"
+        console.log("source: ", source);
+        localStorage.write("paymentMethodInfo", {
+          publicKeyData,
+          source,
+          encryptedCreditCardData,
+        });
+
+        alert("DONE! TODO: Go to the next page?");
+
+        // TODO: Go to the next page?
         break;
       }
       default: {
