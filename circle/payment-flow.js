@@ -27,12 +27,13 @@ const headers = {
 async function getPublicKey() {
     let response = await fetch('https://api-sandbox.circle.com/v1/encryption/public', { method: 'GET', headers: headers })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 
-    return { publicKey: response['data']['publicKey'], keyId: response['data']['keyId'] }
+    return { publicKey: response['publicKey'], keyId: response['keyId'] }
 }
 
-async function encryptCardDetails({ number, cvv }) {
+async function encryptCardDetails(publicKey, keyId, { number, cvv }) {
     const decodedPublicKey = await readKey({ armoredKey: atob(publicKey) })
     const message = await createMessage({ text: JSON.stringify({ number, cvv }) })
     const encryptedCreditCardData = await encrypt({
@@ -65,6 +66,7 @@ async function addCard(cardDetails, encryptedCreditCardData, billingDetails, met
         body: JSON.stringify(addCardBody)
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -90,6 +92,7 @@ async function pay(amount, metadata, encryptedCreditCardData) {
         body: JSON.stringify(paymentBody)
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -99,6 +102,7 @@ async function getPaymentStatus(id) {
         headers: headers
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -108,6 +112,7 @@ async function getMasterWalletBalance() {
         headers: headers
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -122,6 +127,7 @@ async function createWallet() {
         body: JSON.stringify(paymentBody)
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -138,6 +144,7 @@ async function createDepositAddress(walletId) {
         body: JSON.stringify(paymentBody)
     })
         .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -147,6 +154,17 @@ async function getConfiguration() {
         headers: headers
     })
         .then(res => res.json())
+        .then(json => json["data"])
+        .catch(err => console.error('error:' + err));
+}
+
+async function getSettlements() {
+    return await fetch('https://api-sandbox.circle.com/v1/settlements', {
+        method: 'GET',
+        headers: headers
+    })
+        .then(res => res.json())
+        .then(json => json["data"])
         .catch(err => console.error('error:' + err));
 }
 
@@ -155,7 +173,7 @@ async function getConfiguration() {
 const { publicKey, keyId } = await getPublicKey()
 
 const cardDetails = { number: '4007400000000007', cvv: '123', expMonth: 1, expYear: 2025 };
-const encryptedCreditCardData = await encryptCardDetails(cardDetails);
+const encryptedCreditCardData = await encryptCardDetails(publicKey, keyId, cardDetails);
 
 const billingDetails = {
     'line1': 'Test',
@@ -177,7 +195,7 @@ const addCardResult = await addCard(cardDetails, encryptedCreditCardData, billin
 console.log('addCardResult: ', addCardResult);
 
 const source = {
-    'id': addCardResult['data']['id'],
+    'id': addCardResult['id'],
     'type': 'card'
 };
 
@@ -185,9 +203,10 @@ const payResult = await pay('420.69', metadata, encryptedCreditCardData);
 console.log('payResult: ', payResult);
 
 while (true) {
-    let paymentStatus = await getPaymentStatus(payResult['data']['id']);
+    let paymentStatus = await getPaymentStatus(payResult['id']);
     console.log('new status: ', paymentStatus);
-    if (paymentStatus['data']['status'] !== 'pending') {
+    // status will at first be "confirmed" and then eventually "confirmed"
+    if (paymentStatus['status'] !== 'pending') {
         break;
     }
 }
@@ -201,5 +220,8 @@ console.log('configuration: ', configuration);
 const createWalletResult = await createWallet();
 console.log('createWalletResult: ', createWalletResult);
 
-const createDepositAddressResult = await createDepositAddress(createWalletResult['data']['walletId']);
+const createDepositAddressResult = await createDepositAddress(createWalletResult['walletId']);
 console.log('createDepositAddressResult: ', createDepositAddressResult);
+
+const settlementsResult = await getSettlements();
+console.log('settlementsResult: ', settlementsResult);
