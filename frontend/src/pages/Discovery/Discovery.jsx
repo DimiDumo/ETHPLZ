@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import BasePage from '../BasePage/BasePage';
 import DetailView from './DetailView';
 import exampleContent from './content.json';
+import findNfts from './findNfts';
 
 const Discovery = () => {
   const history = useHistory();
@@ -15,8 +16,7 @@ const Discovery = () => {
   const [activeNFT, setActiveNFT] = React.useState({});
   const [showSearchBar, setShowSearchBar] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
-
-  const content = exampleContent;
+  const [content, setContent] = React.useState(exampleContent);
 
   const handleClick = (nft) => {
     setIsDetailedViewOpen(true);
@@ -24,21 +24,27 @@ const Discovery = () => {
     history.push(`/${nft.id}`);
   };
 
+  const fetchNewNfts = async () => {
+    const newNfts = await findNfts(searchText);
+    setContent([]);
+    setContent(newNfts);
+  };
+
   const options = (
     <>
       <div className="grid grid-cols-3 bottom-0 pt-5">
         <div className="col-span-1" />
+        <div className="col-span-1">
+          <img src="/filter.png" alt="" />
+        </div>
         <div className="col-span-1">
           <button
             type="button"
             className="btn-ghost"
             onClick={() => setShowSearchBar(!showSearchBar)}
           >
-            <img src="/filter.png" alt="" />
+            <img src="/search.png" alt="" />
           </button>
-        </div>
-        <div className="col-span-1">
-          <img src="/search.png" alt="" />
         </div>
       </div>
     </>
@@ -60,13 +66,15 @@ const Discovery = () => {
             'page-inactive': !showSearchBar,
           })}
         >
-          <input
-            type="text"
-            placeholder="search..."
-            className=""
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+          <form action="#" onSubmit={e => {e.preventDefault();fetchNewNfts();}}>
+            <input
+              type="text"
+              placeholder="search..."
+              className=""
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </form>
         </div>
         {content.map((item) => (
           <div
@@ -83,6 +91,7 @@ const Discovery = () => {
         isModalOpen={isDetailedViewOpen}
         setIsModalOpen={setIsDetailedViewOpen}
         nft={activeNFT}
+        nftId={nftId}
       />
     </BasePage>
   );
