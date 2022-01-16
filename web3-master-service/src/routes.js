@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const express = require('express')
 const router = express.Router()
 const { createHandler } = require('./api.js')
@@ -8,8 +9,10 @@ const { ApiError } = require('./api.js')
 const PleaseWalletFactory = require('../contracts/WalletFactory.json')
 const PleaseWalletAbi = require('../contracts/PleaseWalletAbi.json')
 
-const getContract = (provider, { abi, address }) => new ethers.Contract(address, abi, provider)
-const getWallet = (provider, address) => new ethers.Contract(address, PleaseWalletAbi, provider)
+const getContract = ({ abi, address }) =>
+  new ethers.Contract(address, abi, getMasterWallet().masterWallet)
+const getWallet = (address) =>
+  new ethers.Contract(address, PleaseWalletAbi, getMasterWallet().masterWallet)
 
 const validateAddress = (address) => {
   if (!ethers.utils.isAddress(address)) {
@@ -18,13 +21,31 @@ const validateAddress = (address) => {
   return ethers.utils.getAddress(address)
 }
 
+async function getPrimarySigner(walletAddress) {
+  const wallet = getWallet(walletAddress)
+  return await wallet.primarySigner()
+}
+
+async function getExistingWallet(signerAddress) {
+  const walletFactory = getContract(PleaseWalletFactory)
+  const newWalletCreationFilter = walletFactory.filters.NewWalletCreated(null, signerAddress)
+  const events = await walletFactory.queryFilter(newWalletCreationFilter)
+  const wallets = events.map(({ args }) => args.walletAddress)
+  const primarySigners = await Promise.all(wallets.map(getPrimarySigner))
+  const [[firstWallet]] = _.zip(wallets, primarySigners).filter(
+    ([, primarySigner]) => primarySigner === signerAddress
+  )
+  return firstWallet
+}
+
 router.post(
   '/create-new-wallet',
   createHandler(async ({ body }) => {
     let { primaryKey, provideNewWalletAddress = false } = body
     primaryKey = validateAddress(primaryKey)
-    const { masterWallet } = getMasterWallet()
-    const walletFactory = getContract(masterWallet, PleaseWalletFactory)
+    const walletFactory = getContract(PleaseWalletFactory)
+    const existingWallet = await getExistingWallet(primaryKey)
+    if (existingWallet) return existingWallet
     const tx = await walletFactory.createDefaultWallet(primaryKey)
     if (!provideNewWalletAddress) {
       return null
@@ -39,10 +60,8 @@ router.post(
 router.get(
   '/primary-key/:walletAddress',
   createHandler(async ({ params }) => {
-    const { masterWallet } = getMasterWallet()
     const walletAddress = validateAddress(params?.walletAddress)
-    const wallet = getWallet(masterWallet, walletAddress)
-    return await wallet.primarySigner()
+    return await getPrimarySigner(walletAddress)
   })
 )
 
