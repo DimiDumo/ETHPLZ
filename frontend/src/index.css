@@ -206,6 +206,7 @@ footer {
   float: right;
   font-size: 14px;
 }
+
 .currency-select option {
   background: rgba(150, 150, 150, 0);
 }
@@ -308,4 +309,78 @@ footer {
   height: 42px;
   width: 62px;
   margin-top: 2px !important;
+}
+
+.payment-spacer {
+  height: 117px;
+  width: 100%;
+}
+
+.payment-page {
+  background-color: #fff;
+  color: #000
+}
+
+.payment-page h1 {
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.payment-page input {
+  background: rgba(196, 196, 196, 0.2);
+  border: 2px solid #C4C4C4;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.cvv-input {
+  width: 73px;
+}
+
+.exp-input {
+  width: 113px;
+}
+
+.payment-page .label-text {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #C4C4C4;
+}
+
+.payment-page .fast-tx-label-text {
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.btn-payment-submit {
+  height: 57px;
+  border-radius: 10px;
+  background-color: #01d1ff;
+  color: #fff;
+  width: 100%;
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.btn-payment-cancel {
+  border: none;
+  background: none;
+  height: 100%;
+  width: 100%;
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
 }
