@@ -13,8 +13,8 @@ const jwtVerify = (token) =>
     })
   )
 
-const verifyAuthToken = wrapMiddleware(async ({ body }) => {
-  const token = body?.auth
+const verifyAuthToken = wrapMiddleware(async ({ body, query }) => {
+  const token = body?.auth ?? query?.auth
   if (!token) throw new ApiError(401, 'Missing .auth auth token')
   const { verified, content } = await jwtVerify(token)
   if (!verified) throw new ApiError(401, 'Invalid token')
