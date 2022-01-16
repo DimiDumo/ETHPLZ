@@ -12,8 +12,8 @@ import Payment from './pages/Payment/Payment';
 
 import './index.css';
 
-const moralisServerUrl = 'https://hjokahdvmfah.usemoralis.com:2053/server';
-const moralisAppId = 'iv7viFkSSsphlLGbduTjH3T181hwLNhaC9IBSUem';
+const moralisServerUrl = 'https://iolr5t6je1fw.usemoralis.com:2053/server';
+const moralisAppId = 'xB0DHaHJhciTsPxAxDTCgoBt4ShWvWkVZMwhOV4Q';
 
 export default function App() {
   return (
