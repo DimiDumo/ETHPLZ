@@ -8,4 +8,6 @@ interface IPleaseWallet {
         address[] calldata _initialGuardians,
         uint256 _initialThreshhold
     ) external;
+
+    function primarySigner() external view returns (address);
 }
