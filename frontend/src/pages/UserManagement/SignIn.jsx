@@ -1,25 +1,34 @@
-import React from 'react';
+import React from "react";
 
-import { useMoralis } from 'react-moralis';
-import { useHistory, useParams } from 'react-router-dom';
+import { useMoralis, useMoralisCloudFunction } from "react-moralis";
+import { useHistory, useParams } from "react-router-dom";
 
-import localWallet from '../../domain/localWallet';
+import localWallet from "../../domain/localWallet";
 
-import WithApple from './Buttons/Apple.png';
-import WithGoogle from './Buttons/Google.png';
+import WithApple from "./Buttons/Apple.png";
+import WithGoogle from "./Buttons/Google.png";
 
 const SignIn = () => {
   const { signup, login, isAuthenticated } = useMoralis();
   const { nftId } = useParams();
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
-  const [userEmail, setUserEmail] = React.useState('web2user@gmail.com');
+  const [userEmail, setUserEmail] = React.useState("web2user@gmail.com");
   // eslint-disable-next-line no-unused-vars
-  const [userPassword, setUserPassword] = React.useState('nfts_are_cool_1234');
+  const [userPassword, setUserPassword] = React.useState("nfts_are_cool_1234");
+  // eslint-disable-next-line no-unused-vars
+  const [primaryKey, setPrimaryKey] = React.useState(null);
 
-  const handleSignup = () => {
+  const createNewUserWalletCloudFunction = useMoralisCloudFunction(
+    "createNewUserWallet",
+    { primaryKey },
+    { autoFetch: false }
+  );
+
+  const handleSignup = async () => {
     const generatedAddress = localWallet.createWallet();
-    signup(userEmail, userPassword, userEmail, {
+    setPrimaryKey(generatedAddress);
+    await signup(userEmail, userPassword, userEmail, {
       localWalletAddress: generatedAddress,
     });
   };
@@ -28,10 +37,10 @@ const SignIn = () => {
     login(userEmail, userPassword);
   };
 
-  const loginOrSignup = () => {
+  const loginOrSignup = async () => {
     const localAddress = localWallet.getAddress();
     if (!localAddress) {
-      handleSignup();
+      await handleSignup();
       return;
     }
 
@@ -39,6 +48,15 @@ const SignIn = () => {
   };
 
   React.useEffect(() => {
+    if (primaryKey) {
+      if (!isAuthenticated) return;
+      createNewUserWalletCloudFunction.fetch();
+    }
+
+    if (primaryKey && !createNewUserWalletCloudFunction.data) {
+      return;
+    }
+
     if (!isAuthenticated) return;
 
     if (nftId) {
@@ -47,7 +65,12 @@ const SignIn = () => {
     }
 
     history.push(`/`);
-  }, [isAuthenticated, nftId]);
+  }, [
+    isAuthenticated,
+    nftId,
+    primaryKey,
+    createNewUserWalletCloudFunction.data,
+  ]);
 
   return (
     <>
