@@ -205,7 +205,7 @@ console.log('payResult: ', payResult);
 while (true) {
     let paymentStatus = await getPaymentStatus(payResult['id']);
     console.log('new status: ', paymentStatus);
-    // status will at first be "confirmed" and then eventually "confirmed"
+    // status will at first be "confirmed" and then eventually "complete"
     if (paymentStatus['status'] !== 'pending') {
         break;
     }
