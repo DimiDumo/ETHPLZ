@@ -33,9 +33,11 @@ async function getExistingWallet(signerAddress) {
   const events = await walletFactory.queryFilter(newWalletCreationFilter)
   const wallets = events.map(({ args }) => args.walletAddress)
   const primarySigners = await Promise.all(wallets.map(getPrimarySigner))
-  const [[firstWallet]] = _.zip(wallets, primarySigners).filter(
+  const res = _.zip(wallets, primarySigners).filter(
     ([, primarySigner]) => primarySigner === signerAddress
   )
+  if (!res.length) return null
+  const [[firstWallet]] = res
   return firstWallet
 }
 
