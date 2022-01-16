@@ -46,7 +46,7 @@ const SignIn = () => {
       return;
     }
 
-    history.push(`/portfolio`);
+    history.push(`/`);
   }, [isAuthenticated, nftId]);
 
   return (
