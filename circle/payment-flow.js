@@ -102,6 +102,54 @@ async function getPaymentStatus(id) {
         .catch(err => console.error('error:' + err));
 }
 
+async function getMasterWalletBalance() {
+    return await fetch('https://api-sandbox.circle.com/v1/balances', {
+        method: 'GET',
+        headers: headers
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
+async function createWallet() {
+    const paymentBody = {
+        'idempotencyKey': uuidv4()
+    };
+
+    return await fetch('https://api-sandbox.circle.com/v1/wallets', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(paymentBody)
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
+async function createDepositAddress(walletId) {
+    const paymentBody = {
+        'idempotencyKey': uuidv4(),
+        'currency': 'USD',
+        'chain': 'ETH'
+    };
+
+    return await fetch('https://api-sandbox.circle.com/v1/wallets/' + walletId + '/addresses', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(paymentBody)
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
+async function getConfiguration() {
+    return await fetch('https://api-sandbox.circle.com/v1/configuration', {
+        method: 'GET',
+        headers: headers
+    })
+        .then(res => res.json())
+        .catch(err => console.error('error:' + err));
+}
+
 // ================usage======================
 
 const { publicKey, keyId } = await getPublicKey()
@@ -126,20 +174,32 @@ const metadata = {
 };
 
 const addCardResult = await addCard(cardDetails, encryptedCreditCardData, billingDetails, metadata);
-console.log("addCardResult: ", addCardResult);
+console.log('addCardResult: ', addCardResult);
 
 const source = {
-    'id': addCardResult["data"]["id"],
+    'id': addCardResult['data']['id'],
     'type': 'card'
 };
 
-const payResult = await pay("420.69", metadata, encryptedCreditCardData);
-console.log("payResult: ", payResult);
+const payResult = await pay('420.69', metadata, encryptedCreditCardData);
+console.log('payResult: ', payResult);
 
 while (true) {
-    let paymentStatus = await getPaymentStatus(payResult["data"]["id"]);
-    console.log("new status: ", paymentStatus);
-    if (paymentStatus["data"]["status"] !== "pending") {
+    let paymentStatus = await getPaymentStatus(payResult['data']['id']);
+    console.log('new status: ', paymentStatus);
+    if (paymentStatus['data']['status'] !== 'pending') {
         break;
     }
 }
+
+const masterWalletBalance = await getMasterWalletBalance();
+console.log('masterWalletBalance: ', JSON.stringify(masterWalletBalance));
+
+const configuration = await getConfiguration();
+console.log('configuration: ', configuration);
+
+const createWalletResult = await createWallet();
+console.log('createWalletResult: ', createWalletResult);
+
+const createDepositAddressResult = await createDepositAddress(createWalletResult['data']['walletId']);
+console.log('createDepositAddressResult: ', createDepositAddressResult);
