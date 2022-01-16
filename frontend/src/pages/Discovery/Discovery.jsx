@@ -31,6 +31,20 @@ const Discovery = () => {
     history.push(`/${nft.id}`);
   };
 
+  const options = (
+    <>
+      <div className="grid grid-cols-3 bottom-0 pt-5">
+        <div className="col-span-1" />
+        <div className="col-span-1">
+          <img src="/filter.png" alt="" />
+        </div>
+        <div className="col-span-1">
+          <img src="/search.png" alt="" />
+        </div>
+      </div>
+    </>
+  );
+
   React.useEffect(() => {
     if (nftId) {
       setIsDetailedViewOpen(true);
@@ -38,9 +52,10 @@ const Discovery = () => {
       setActiveNFT(nft);
     }
   }, [nftId]);
+
   return (
-    <BasePage headerTitle="Discover">
-      <div className="grid grid-cols-3 gap-1 pt-4 bg-base-100">
+    <BasePage headerTitle="Discover" rightElem={options} pageName="discover">
+      <div className="grid grid-cols-3 gap-1 pt-1 bg-base-100">
         {content.map((item) => (
           <div
             key={item.id}

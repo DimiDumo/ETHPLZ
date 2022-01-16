@@ -6,7 +6,7 @@ import BasePage from '../BasePage/BasePage';
 const Settings = () => {
   const { logout, isAuthenticated } = useMoralis();
   return (
-    <BasePage headerTitle="Settings">
+    <BasePage headerTitle="Settings" pageName="settings">
       <div className="grid gap-1 p-3 pt-4">
         <div className="settings-item">Profile</div>
         <div className="settings-item">Preference</div>
