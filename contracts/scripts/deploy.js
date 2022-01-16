@@ -5,11 +5,15 @@ const delay = (timeout) => new Promise((resolve) => setTimeout(() => resolve(), 
 
 async function main() {
   const verifications = []
-  const GuardianManager = await ethers.getContractFactory('GuardianManager')
+  // const GuardianManager = await ethers.getContractFactory('GuardianManager')
   const PleaseWallet = await ethers.getContractFactory('PleaseWallet')
   const PleaseWalletFactory = await ethers.getContractFactory('PleaseWalletFactory')
 
-  const guardianManager = await GuardianManager.deploy()
+  // const guardianManager = await GuardianManager.deploy()
+  const guardianManager = await ethers.getContractAt(
+    'GuardianManager',
+    '0x8F3F47b8752A369Bcd90e8aB5855c2CB054B031A'
+  )
   console.log(`guardian manager deployed at ${guardianManager.address}`)
   verifications.push({ address: guardianManager.address })
   console.log(`prefix: ${await guardianManager.GUARDIAN_CALL_PREFIX()}`)

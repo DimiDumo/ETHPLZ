@@ -34,10 +34,18 @@ module.exports = {
     rinkeby: {
       url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161', // public metamask url
       accounts
+    },
+    polygon: {
+      url: 'http://polygon-rpc.com/',
+      accounts,
+      gasPrice: 51000000000
     }
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_KEY
+    apiKey: {
+      rinkeby: process.env.ETHERSCAN_KEY,
+      polygon: process.env.POLYGONSCAN_KEY
+    }
   },
   gasReporter: {
     enabled: true,

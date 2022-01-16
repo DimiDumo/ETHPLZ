@@ -6,7 +6,8 @@ Moralis.Cloud.define(
 
     logger.info(`params: ${JSON.stringify(params)}`)
 
-    if (user.get('localWalletAddress') !== '0x0000000000000000000000000000000000000000') {
+    const localWalletAddress = user.get('localWalletAddress')
+    if (localWalletAddress !== '0x0000000000000000000000000000000000000000' && localWalletAddress) {
       throw new Error('Wallet already registered')
     }
 
