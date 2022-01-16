@@ -309,3 +309,80 @@ footer {
   width: 62px;
   margin-top: 2px !important;
 }
+
+.recover-page h1 {
+  font-family: Nunito;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+}
+
+.info-grey {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #C4C4C4;
+}
+
+.start-button {
+  background: #00D1FF;
+  border-radius: 10px;
+  height: 57px;
+  font-family: Nunito;
+font-style: normal;
+font-weight: bold;
+font-size: 24px;
+color: #fff;
+padding: 0 20px;
+}
+
+.confirm-text p {
+  color: #FF0000;
+  font-weight: bold;
+font-size: 16px;
+}
+
+.confirm-text p button {
+  color: #00D1FF;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.grey-line {
+  height: 2px;
+  width: 100%;
+  background: #C4C4C4;
+}
+
+.guardian-name {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #C4C4C4;
+}
+
+.guardian-status-approved {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #00FF19;
+}
+
+.guardian-status-pending {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #FBBC05;
+}
+
+.guardian-danger {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #FF0000;
+}
