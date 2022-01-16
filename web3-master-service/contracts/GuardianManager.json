@@ -1,0 +1,183 @@
+{
+  "address": "0x8c21D531e3B8E5f1DC2d0011c9a3075ffdC81d4B",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "iteration",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "guardianCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "SettingsUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "GUARDIAN_CALL_PREFIX",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_targetWallet",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "isPlzWallet",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "guardian",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "salt",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "signature",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct IGuardianManager.GuardianInput[]",
+          "name": "_guardians",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_callData",
+          "type": "bytes"
+        }
+      ],
+      "name": "executeGuardianCall",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_wallet",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_guardian",
+          "type": "address"
+        }
+      ],
+      "name": "isGuardianFor",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "recoverySettingsOf",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "currentIteration",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "guardianThreshhold",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "saltUsed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_newGuardians",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_newThreshhold",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateSettings",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

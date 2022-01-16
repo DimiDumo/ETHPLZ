@@ -5,7 +5,7 @@ const appId = 'xB0DHaHJhciTsPxAxDTCgoBt4ShWvWkVZMwhOV4Q'
 
 Moralis.start({ serverUrl, appId })
 
-const GUARDIAN_CALL_PREFIX = '0xf0dae52ad59bb1e1730fe1c01ee554ea1b193f2daba45557d706c49bc2559c93'
+const GUARDIAN_CALL_PREFIX = '0x15c93548f3ed7aaf7bb7bcd44ee4fe5214a86faaa8de12123e7b82d3e0d98526'
 
 /* Authentication code */
 async function login() {
@@ -64,7 +64,7 @@ async function generateContractWallet() {
   console.log('user: ', user)
   console.log('user.get("email"): ', user.get('email'))
   const result = await Moralis.Cloud.run('createNewUserWallet', {
-    primaryKey: getWallet().wallet.address
+    primaryKey: getWallet().address
   })
   console.log('result: ', result)
   console.log(`user wallet: ${user.get('localWalletAddress')}`)
@@ -236,7 +236,7 @@ async function guardianRecoveryAccept(guardianWallet, targetSmartWallet, newSign
   const salt = ethers.utils.hexlify(ethers.utils.randomBytes(32))
   const authHash = getGuardianAuthHash(targetSmartWallet, newSigner, salt)
   const signature = await guardianWallet.signMessage(ethers.utils.arrayify(authHash))
-  return { signature, guardian: guardianWallet.address }
+  return { signature, guardian: guardianWallet.address, salt }
 }
 
 document.getElementById('btn-login').onclick = login
