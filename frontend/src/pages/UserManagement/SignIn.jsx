@@ -28,9 +28,7 @@ const SignIn = () => {
   const handleSignup = async () => {
     const generatedAddress = localWallet.createWallet();
     setPrimaryKey(generatedAddress);
-    await signup(userEmail, userPassword, userEmail, {
-      localWalletAddress: generatedAddress,
-    });
+    await signup(userEmail, userPassword, userEmail);
   };
 
   const handleLogin = () => {

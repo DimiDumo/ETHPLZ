@@ -1,23 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
 
-import { useMoralis } from 'react-moralis';
+import { useMoralis } from "react-moralis";
 
-import localWallet from '../../domain/localWallet';
+import localWallet from "../../domain/localWallet";
 
 const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
   const { signup, login } = useMoralis();
   // eslint-disable-next-line no-unused-vars
-  const [userEmail, setUserEmail] = React.useState('web2user@gmail.com');
+  const [userEmail, setUserEmail] = React.useState("web2user@gmail.com");
   // eslint-disable-next-line no-unused-vars
-  const [userPassword, setUserPassword] = React.useState('nfts_are_cool_1234');
+  const [userPassword, setUserPassword] = React.useState("nfts_are_cool_1234");
 
   const handleSignup = () => {
     const generatedAddress = localWallet.createWallet();
-    signup(userEmail, userPassword, userEmail, {
-      localWalletAddress: generatedAddress,
-    });
+    signup(userEmail, userPassword, userEmail);
   };
 
   const handleLogin = () => {
@@ -35,7 +33,7 @@ const SignupModal = ({ isModalOpen, setIsModalOpen }) => {
   };
 
   return (
-    <div className={classnames('modal', { 'modal-open': isModalOpen })}>
+    <div className={classnames("modal", { "modal-open": isModalOpen })}>
       <div className="modal-box">
         <p>You need an account to be able to purchase and save NFTs</p>
         <div className="form-control">
