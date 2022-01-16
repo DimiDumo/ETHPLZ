@@ -7,6 +7,7 @@ import BasePage from '../BasePage/BasePage';
 import DetailView from './DetailView';
 import exampleContent from './content.json';
 import findNfts from './findNfts';
+import localStorage from '../../domain/localStorage';
 
 const Discovery = () => {
   const history = useHistory();
@@ -28,6 +29,8 @@ const Discovery = () => {
     const newNfts = await findNfts(searchText);
     setContent([]);
     setContent(newNfts);
+    localStorage.write('nftsLast', newNfts);
+    localStorage.write('nft', activeNFT);
   };
 
   const options = (
@@ -49,6 +52,21 @@ const Discovery = () => {
       </div>
     </>
   );
+
+  React.useEffect(() => {
+    setTimeout(() => {
+
+
+    const myNfts = localStorage.read('nftsLast', null);
+    if (!myNfts) {
+      return;
+    }
+    const nft = localStorage.read('nft', null);
+    setActiveNFT(nft);
+    setContent([]);
+    setContent(myNfts);
+    }, 1000)
+  }, []);
 
   React.useEffect(() => {
     if (nftId) {
