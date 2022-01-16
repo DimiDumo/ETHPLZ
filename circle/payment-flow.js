@@ -168,7 +168,7 @@ async function getSettlements() {
         .catch(err => console.error('error:' + err));
 }
 
-// ================usage======================
+// ================payment-flow======================
 
 const { publicKey, keyId } = await getPublicKey()
 
@@ -210,6 +210,8 @@ while (true) {
         break;
     }
 }
+
+// ===========misc-useless(maybe)-stuff================
 
 const masterWalletBalance = await getMasterWalletBalance();
 console.log('masterWalletBalance: ', JSON.stringify(masterWalletBalance));
