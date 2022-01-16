@@ -9,6 +9,7 @@ interface IGuardianManager {
     }
 
     struct GuardianInput {
+        bool isPlzWallet;
         address guardian;
         bytes32 salt;
         bytes signature;

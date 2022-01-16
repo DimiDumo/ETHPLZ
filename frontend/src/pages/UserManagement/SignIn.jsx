@@ -46,7 +46,7 @@ const SignIn = () => {
       return;
     }
 
-    history.push(`/portfolio`);
+    history.push(`/`);
   }, [isAuthenticated, nftId]);
 
   return (
@@ -63,7 +63,7 @@ const SignIn = () => {
               <input
                 type="text"
                 placeholder="email"
-                className="input input-bordered w-max"
+                className="input input-bordered w-full"
                 value={userEmail}
                 readOnly
               />
@@ -74,13 +74,17 @@ const SignIn = () => {
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input
-            type="password"
-            placeholder="password"
-            className="input input-bordered"
-            value={userPassword}
-            readOnly
-          />
+          <div className="grid grid-cols-3">
+            <div className="col-span-2">
+              <input
+                type="password"
+                placeholder="password"
+                className="input input-bordered w-full"
+                value={userPassword}
+                readOnly
+              />
+            </div>
+          </div>
         </div>
         <div className="">
           <div className="grid grid-cols-3 mt-7">

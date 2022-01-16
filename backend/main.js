@@ -1,6 +1,8 @@
 /* Moralis init code */
-const serverUrl = 'https://hjokahdvmfah.usemoralis.com:2053/server'
-const appId = 'iv7viFkSSsphlLGbduTjH3T181hwLNhaC9IBSUem'
+const serverUrl = 'https://iolr5t6je1fw.usemoralis.com:2053/server'
+
+const appId = 'xB0DHaHJhciTsPxAxDTCgoBt4ShWvWkVZMwhOV4Q'
+
 Moralis.start({ serverUrl, appId })
 
 /* Authentication code */
@@ -40,21 +42,26 @@ async function emailPasswordSignup(email, password) {
   // TODO: Could add some signature verification but eh
 
   try {
+    console.log('bob 1')
     await user.signUp()
     // Hooray! Let them use the app now.
   } catch (error) {
+    console.log('what?')
     // Show the error message somewhere and let the user try again.
-    alert('Error: ' + error.code + ' ' + error.message)
+    console.log('error: ', error)
   }
 }
 
 async function generateContractWallet() {
   let user = Moralis.User.current()
-  if (user) {
-    const params = {}
-    const result = await Moralis.Cloud.run('generateContractWallet', params)
-    console.log('generateContractWallet: ', result)
-  }
+  console.log('user: ', await user.get('localWalletAddress'))
+  console.log('user: ', user)
+  console.log('user.get("email"): ', user.get('email'))
+  const result = await Moralis.Cloud.run('createNewUserWallet', {
+    primaryKey: '0x6fF546eC084962Ac2A7962b0f94d5f766e467aF4'
+  })
+  console.log('result: ', result)
+  console.log(`user wallet: ${user.get('localWalletAddress')}`)
 }
 
 async function emailPasswordLogin(email, password) {

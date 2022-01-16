@@ -3,6 +3,7 @@ import { useMoralis } from 'react-moralis';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useHistory } from 'react-router-dom';
+// import getNftDetails from './getNftDetails';
 
 const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
   const infoBoxRef = useRef(null);
@@ -67,10 +68,20 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
     );
   }
 
+  // const getNftDetailsLocal = async () => {
+  //   console.log('finding for nft: ', nft);
+  //   console.log('nftId: ', nftId)
+  //   const idArray = nftId.split('-');
+  //   if (!idArray.length) return;
+  //   const [tokenId, contractAddress]  = idArray;
+  //   await getNftDetails({ contractAddress, tokenId });
+  // };
+
   useEffect(() => {
     if (isModalOpen) {
       scrollBox.current.scrollTo({ top: 0 });
       document.querySelector('body').classList.add('noscroll');
+      // getNftDetailsLocal();
     } else {
       document.querySelector('body').classList.remove('noscroll');
       scrollBox.current.scrollTo({ top: 0 });

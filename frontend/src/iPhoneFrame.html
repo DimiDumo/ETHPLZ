@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    img {
+  max-width: 100%;
+}
+
+.Phone {
+  top: 40px;
+  position: relative;
+  width: 446px;
+  height: 931px;
+  border: 4px solid #444;
+  border-radius: 50px;
+  background-color: #000;
+  padding: 10px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.Phone-screen {
+    padding: 2px;
+  position: absolute;
+  width: 442px;
+  height: 926px;
+  overflow: hidden;
+}
+
+
+iframe, .Phone-content {
+    border-radius: 50px;
+    width: 100%;
+    height: 100%;
+}
+
+</style>
+</head>
+<body>
+    <div class="Phone">
+        <div class="Phone-screen">
+          <div class="Phone-content">
+            <iframe src="http://localhost:3000" title="description"></iframe>
+          </div>
+        </div>
+      </div>
+
+</body>
+</html>
