@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import localWallet from '../../domain/localWallet';
 
-import BasePage from '../BasePage/BasePage';
 import WithApple from './Buttons/Apple.png';
 import WithGoogle from './Buttons/Google.png';
 
@@ -51,20 +50,25 @@ const SignIn = () => {
   }, [isAuthenticated, nftId]);
 
   return (
-    <BasePage headerTitle="Sign In">
-      <div className="p-4">
-        <p>Existing Users</p>
-        <div className="form-control">
+    <>
+      <div className="p-4 login-page h-screen">
+        <div className="login-spacer" />
+        <h1>PLZ Wallet</h1>
+        <div className="form-control mb-5">
           <label className="label">
-            <span className="label-text">Email</span>
+            <span className="label-text">Email/Username</span>
           </label>
-          <input
-            type="text"
-            placeholder="email"
-            className="input input-bordered"
-            value={userEmail}
-            readOnly
-          />
+          <div className="grid grid-cols-3">
+            <div className="col-span-2">
+              <input
+                type="text"
+                placeholder="email"
+                className="input input-bordered w-max"
+                value={userEmail}
+                readOnly
+              />
+            </div>
+          </div>
         </div>
         <div className="form-control">
           <label className="label">
@@ -78,32 +82,45 @@ const SignIn = () => {
             readOnly
           />
         </div>
-        <div className="modal-action">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={loginOrSignup}
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => history.goBack()}
-          >
-            Cancel
-          </button>
+        <div className="">
+          <div className="grid grid-cols-3 mt-7">
+            <div className="col-span-2">
+              <button
+                type="button"
+                className="btn-submit"
+                onClick={loginOrSignup}
+              >
+                Submit
+              </button>
+            </div>
+            <div className="col-span-1">
+              <button
+                type="button"
+                className="btn-login-cancel"
+                onClick={() => history.goBack()}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
 
-        <p>or sign in here</p>
-        <div className="flex flex-row justify-between">
+        <p className="mt-5 font-bold">Forgot username/password</p>
+        <p className="mt-3 font-bold">Or sign in here:</p>
+        <div className="flex flex-row justify-between mt-2">
           <img src={WithApple} alt="" />
           <img src={WithGoogle} alt="" />
         </div>
-
-        <p>Recover account</p>
+        <div className="white-line mt-4" />
+        <button
+          type="button"
+          className="btn-submit mt-4"
+          onClick={loginOrSignup}
+        >
+          Sign up!
+        </button>
       </div>
-    </BasePage>
+    </>
   );
 };
 

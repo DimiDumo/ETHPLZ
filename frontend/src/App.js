@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings/Settings';
 import SignIn from './pages/UserManagement/SignIn';
 import Purchase from './pages/Purchase/Purchase';
+import Payment from './pages/Payment/Payment';
 
 import './index.css';
 
@@ -30,6 +31,9 @@ export default function App() {
           </Route>
           <Route path="/purchase/:nftId">
             <Purchase />
+          </Route>
+          <Route path="/set-up-payment">
+            <Payment />
           </Route>
           <Route path="/login/:nftId?">
             <SignIn />

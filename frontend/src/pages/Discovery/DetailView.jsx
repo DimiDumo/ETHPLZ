@@ -138,7 +138,11 @@ const DetailView = ({ isModalOpen, setIsModalOpen, nft }) => {
 DetailView.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
-  nft: PropTypes.object.isRequired,
+  nft: PropTypes.object,
+};
+
+DetailView.defaultProps = {
+  nft: {},
 };
 
 export default DetailView;

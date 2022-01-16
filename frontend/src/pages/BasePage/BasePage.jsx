@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BottomLink from './BottomLink';
 
 const BasePage = (props) => {
-  const { children, headerTitle, rightElem, pageName } = props;
+  const { children, headerTitle, rightElem, pageName, arrowBack } = props;
   const [isLoggedIn] = useState(false);
   return (
     <div className="flex h-screen flex-col">
@@ -11,7 +11,14 @@ const BasePage = (props) => {
         <div className="phone-notch" />
         <div className="grid grid-cols-4">
           <div className="col-span-3">
-            <p className="header-title">{headerTitle}</p>
+            <p className="header-title">
+              {arrowBack && (
+                <button type="button" className="align-top btn-arrow-back mr-2">
+                  <img src="/arrow_back.png" alt="<-" className="ml-5" />
+                </button>
+              )}
+              {headerTitle}
+            </p>
           </div>
           <div className="col-span-1">{rightElem}</div>
         </div>
@@ -70,11 +77,14 @@ BasePage.propTypes = {
   children: PropTypes.node.isRequired,
   headerTitle: PropTypes.string.isRequired,
   rightElem: PropTypes.element,
-  pageName: PropTypes.string.isRequired,
+  pageName: PropTypes.string,
+  arrowBack: PropTypes.bool,
 };
 
 BasePage.defaultProps = {
   rightElem: <span />,
+  pageName: '',
+  arrowBack: false,
 };
 
 export default BasePage;

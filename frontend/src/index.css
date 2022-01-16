@@ -240,3 +240,72 @@ footer {
 .page-inactive {
   display: none;
 }
+
+.login-spacer {
+  height: 117px;
+  width: 100%;
+}
+
+.login-page {
+  background-color: #01d1ff;
+  color: #fff
+}
+
+.login-page h1 {
+  font-family: Nunito;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.login-page input {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #FFFFFF;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.login-page .label-text {
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: #fff;
+}
+
+.btn-submit {
+  height: 57px;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #01d1ff;
+  width: 100%;
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.btn-login-cancel {
+  border: none;
+  background: none;
+  height: 100%;
+  width: 100%;
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.white-line {
+  height: 2px;
+  background: #fff;
+  width: 100%;
+}
+
+.btn-arrow-back {
+  border-radius: 10px;
+  background: #01d1ff;
+  height: 42px;
+  width: 62px;
+  margin-top: 2px !important;
+}
