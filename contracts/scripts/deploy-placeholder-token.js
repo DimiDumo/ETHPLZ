@@ -5,6 +5,7 @@ async function main() {
   const PlaceholderToken = await ethers.getContractFactory('PlaceholderToken')
   const token = await PlaceholderToken.deploy()
   console.log(`placeholder token deployed at ${token.address}`)
+  await hardhat.run('verify:verify', { address: token.address })
 }
 
 main()
