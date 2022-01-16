@@ -46,14 +46,14 @@ const SignIn = () => {
   };
 
   React.useEffect(() => {
-    if (primaryKey) {
-      if (!isAuthenticated) return;
-      createNewUserWalletCloudFunction.fetch();
-    }
+    // if (primaryKey) {
+    //   if (!isAuthenticated) return;
+    //   createNewUserWalletCloudFunction.fetch();
+    // }
 
-    if (primaryKey && !createNewUserWalletCloudFunction.data) {
-      return;
-    }
+    // if (primaryKey && !createNewUserWalletCloudFunction.data) {
+    //   return;
+    // }
 
     if (!isAuthenticated) return;
 
