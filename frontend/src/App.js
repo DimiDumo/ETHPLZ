@@ -9,6 +9,8 @@ import Settings from './pages/Settings/Settings';
 import SignIn from './pages/UserManagement/SignIn';
 import Purchase from './pages/Purchase/Purchase';
 import Payment from './pages/Payment/Payment';
+import Recover from './pages/Recover/Recover';
+import RecoverGuardians from './pages/Recover/RecoverGuardians';
 
 import './index.css';
 
@@ -28,6 +30,12 @@ export default function App() {
           </Route>
           <Route path="/portfolio">
             <Portfolio />
+          </Route>
+          <Route path="/recover">
+            <Recover />
+          </Route>
+          <Route path="/recover-guardians">
+            <RecoverGuardians />
           </Route>
           <Route path="/purchase/:nftId">
             <Purchase />
