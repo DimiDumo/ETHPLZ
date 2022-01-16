@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "cloud-watcher": "npx moralis-admin-cli watch-cloud-folder --moralisSubdomain iolr5t6je1fw.usemoralis.com --autoSave 1 --moralisCloudfolder ./cloud",
     "get-logs": "npx moralis-admin-cli get-logs"
-
   },
   "author": "",
   "license": "ISC",

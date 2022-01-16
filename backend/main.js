@@ -54,10 +54,14 @@ async function emailPasswordSignup(email, password) {
 
 async function generateContractWallet() {
   let user = Moralis.User.current()
+  console.log('user: ', await user.get('localWalletAddress'))
   console.log('user: ', user)
-  const params = { amazing: 'weird' }
-  const result = await Moralis.Cloud.run('createNewUserWallet', params)
-  console.log('generateContractWallet: ', result)
+  console.log('user.get("email"): ', user.get('email'))
+  const result = await Moralis.Cloud.run('createNewUserWallet', {
+    primaryKey: '0x6fF546eC084962Ac2A7962b0f94d5f766e467aF4'
+  })
+  console.log('result: ', result)
+  console.log(`user wallet: ${user.get('localWalletAddress')}`)
 }
 
 async function emailPasswordLogin(email, password) {
