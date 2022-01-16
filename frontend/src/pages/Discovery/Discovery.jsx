@@ -66,7 +66,13 @@ const Discovery = () => {
             'page-inactive': !showSearchBar,
           })}
         >
-          <form action="#" onSubmit={e => {e.preventDefault();fetchNewNfts();}}>
+          <form
+            action="#"
+            onSubmit={(e) => {
+              e.preventDefault();
+              fetchNewNfts();
+            }}
+          >
             <input
               type="text"
               placeholder="search..."

@@ -15,7 +15,7 @@ export default async function getNftDetails({ contractAddress, tokenId }) {
         },
         params: {
           chain: 'ethereum',
-          type: 'list'
+          type: 'list',
         },
       }
     );
