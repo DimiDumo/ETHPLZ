@@ -66,7 +66,7 @@ contract GuardianManager is IGuardianManager {
             }
 
             bytes32 salt = guardianInp.salt;
-            if (salt == bytes32(0)) {
+            if (salt != bytes32(0)) {
                 require(!saltUsed[guardian][salt], "GuardMan: Salt already used");
                 bytes32 guardianAuthHash = keccak256(
                     abi.encode(GUARDIAN_CALL_PREFIX, callHash, salt)

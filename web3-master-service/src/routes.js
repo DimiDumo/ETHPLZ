@@ -7,6 +7,7 @@ const getMasterWallet = require('./provider.js')
 const { ApiError } = require('./api.js')
 
 const PleaseWalletFactory = require('../contracts/WalletFactory.json')
+const GuardianManager = require('../contracts/GuardianManager.json')
 const PleaseWalletAbi = require('../contracts/PleaseWalletAbi.json')
 
 const getContract = ({ abi, address }) =>
@@ -32,9 +33,11 @@ async function getExistingWallet(signerAddress) {
   const events = await walletFactory.queryFilter(newWalletCreationFilter)
   const wallets = events.map(({ args }) => args.walletAddress)
   const primarySigners = await Promise.all(wallets.map(getPrimarySigner))
-  const [[firstWallet]] = _.zip(wallets, primarySigners).filter(
+  const res = _.zip(wallets, primarySigners).filter(
     ([, primarySigner]) => primarySigner === signerAddress
   )
+  if (!res.length) return null
+  const [[firstWallet]] = res
   return firstWallet
 }
 
@@ -73,6 +76,29 @@ router.get(
   createHandler(async () => {
     const { masterWallet } = getMasterWallet()
     return masterWallet.address
+  })
+)
+
+router.post(
+  '/submit-recovery',
+  createHandler(async ({ body }) => {
+    const { masterAccept, targetWallet, newSigner, guardianAccepts } = body
+    const calldata = getWallet(targetWallet).interface.encodeFunctionData('resetPrimarySigner', [
+      newSigner
+    ])
+    if (masterAccept) {
+      guardianAccepts.push({
+        isPlzWallet: false,
+        salt: ethers.utils.hexZeroPad('0x0', 32),
+        signature: '0x',
+        guardian: getMasterWallet().masterWallet.address
+      })
+    }
+    const guardianManager = getContract(GuardianManager)
+    const tx = await guardianManager.executeGuardianCall(targetWallet, guardianAccepts, calldata, {
+      gasLimit: 2000000
+    })
+    return tx.hash
   })
 )
 
