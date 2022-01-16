@@ -1,3 +1,4 @@
 node_modules
 .env
-cloud-env.js
+.env.js
+cloud/cloud-env.js
